@@ -20,9 +20,12 @@ LOG_TO_FILE=0
 
 ###### Bootstrapping ######
 # source and assign default User Interface for libui.sh
-source $LIB_CORE/libs/libui.sh
+source $LIB_USER/libs/libui.sh
 libui_sh_init $UI
 
+load_lib lib-flowcontrol.sh
+load_lib lib-interactive.sh
+load_lib lib-misc.sh
 
 ###### perform actual logic ######
 echo "Welcome to $TITLE"
@@ -66,6 +69,16 @@ do
 
 done
 
-start_vboxsh
+# $1 library name   
+load_lib ()
+{
+	[ -z "$1" ] && die_error "load_library needs a library as \$1"
+	log "Loading library /libs/$1 ..."
+	lib=$LIB_USER/"$1"
+	
+	source $lib || die_error "Something went wrong while sourcing library $lib"
+}
+
+start_interactive
 
 exit_vboxsh

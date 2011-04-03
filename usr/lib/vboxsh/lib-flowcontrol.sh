@@ -12,18 +12,6 @@ usage ()
 }
 
 
-# $1 library name   
-
-load_lib ()
-{
-	[ -z "$1" ] && die_error "load_library needs a library as \$1"
-	log "Loading library /libs/$1 ..."
-	lib=$LIB_USER/"$1"
-	
-	source $lib || die_error "Something went wrong while sourcing library $lib"
-}
-
-
 # $1 worker/program name
 # $2... extra args for worker/program (optional)
 execute ()
