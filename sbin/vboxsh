@@ -1,0 +1,71 @@
+#!/bin/bash
+
+
+###### Set some default variables ######
+TITLE="Vbox Shell Control"
+LOG="/dev/tty7"
+LIB_USER=/usr/lib/vboxsh
+LIB_CORE=$LIB_USER #Deprecated
+RUNTIME_DIR=/tmp/vboxsh
+LOG_DIR=/var/log/vboxsh
+LOGFILE=$LOG_DIR/vboxsh.log
+DISCLAIMER="Note that despite our careful coding and proper testing there may still be bugs in this software."
+UI="dia"
+
+export LC_COLLATE=C # for consistent sorting behavior
+
+#DEBUGGING Best not to fool around here.\
+LOG_TO_FILE=0
+
+
+###### Bootstrapping ######
+# source and assign default User Interface for libui.sh
+source $LIB_CORE/libs/libui.sh
+libui_sh_init $UI
+
+
+###### perform actual logic ######
+echo "Welcome to $TITLE"
+
+
+# Processes args that were not already matched by the basic rules.
+process_args ()
+{
+	# known options: we don't know any yet
+	# return 0
+
+	# if we are still here, we didn't return 0 for a known option. hence this is an unknown option
+	usage
+	exit 5
+}
+
+while getopts ":i:dlp:$var_OPTS_STRING" OPTION
+do
+	case $OPTION in
+	i)
+		[ -z "$OPTARG" ] && usage && exit 1 #TODO: check if it's necessary to do this. the ':' in $var_OPTS_STRING might be enough
+		[ "$OPTARG" != cli -a "$OPTARG" = !dia ] && die_error "-i must be dia or cli"
+		libui_sh_init $OPTARG
+		;;
+	d)
+		export DEBUG=1
+		LOG_TO_FILE=1
+		;;
+	l)
+		LOG_TO_FILE=1
+		;;
+	h)
+		usage
+		exit
+		;;
+	?)
+		# If we hit something elso, call process_args
+		process_args -$OPTION $OPTARG # you can override this function in your profile to parse additional arguments and/or override the behavior above
+		;;
+	esac
+
+done
+
+start_vboxsh
+
+exit_vboxsh
