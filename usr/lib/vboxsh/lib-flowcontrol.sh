@@ -2,10 +2,10 @@
 
 usage ()
 {
-	msg="aif -p <procedurename>  Select a procedure # If given, this *must* be the first option
-    -i <dia/cli>         Override interface type (optional)
-    -d                   Explicitly enable debugging (/var/log/aif/debug.log) (optional)
-    -l                   Explicitly enable logging to file (/var/log/aif/aif.log) (optional)
+	msg="vboxsh -[idlh]
+    -i <dia/cli>         Override interface type (optional) default=dia
+    -d                   Explicitly enable debugging (/var/log/vboxsh/debug.log) (optional)
+    -l                   Explicitly enable logging to file (/var/log/vboxsh/vboxsh.log) (optional)
     -h                   Help: show usage  (optional)\n"
 
 	echo -e "$msg"
