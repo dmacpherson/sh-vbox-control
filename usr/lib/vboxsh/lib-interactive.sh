@@ -4,7 +4,7 @@ depend_procedure core base # esp for auto_{network,locale,fstab}, intro and set_
 
 # This is a port of the original /arch/setup script.  It doesn't use aif phases but uses it's own menu-based flow (phase) control
 
-EDITOR=
+EDITOR=nano
 BLOCK_ROLLBACK_USELESS=1
 
 # clock
@@ -20,7 +20,7 @@ worker_vm_create_title='Create Virtual Machine'
 worker_vm_modify_title='Modify Virtual Machine'
 worker_vm_startstop_title='Start/Stop Virtual Machine'
 worker_vm_delete_title='Delete Virtual Machine'
-worker_vm_manage_iso='Mount/Unmount ISO Image'
+worker_vm_manage_iso_title='Mount/Unmount ISO Image'
 start_interactive ()
 {
 	#####################
