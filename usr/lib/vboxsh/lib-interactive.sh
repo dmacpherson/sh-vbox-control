@@ -51,7 +51,7 @@ mainmenu()
         "7")
 		;;
         "8")	#TODO do any cleanups and wait for any open PID's that need monitoring.
-		&& exit_vboxsh ;;
+		exit_vboxsh ;;
         *)
 		ask_yesno "Are you sure you want to exit?" && exit_vboxsh ;;
     esac
