@@ -35,14 +35,14 @@ mainmenu()
 
 	#TODO: why does a '2' appear instead of '' ??
 	ask_option $default "MAIN MENU" '' required \
-	"\"1\"" "\"$worker_vm_list_title\"" \
-	"\"2\"" "\"$worker_vm_create_title\"" \
-	"\"3\"" "\"$worker_vm_modify_title\"" \
-	"\"4\"" "\"$worker_vm_startstop_title\"" \
-	"\"5\"" "\"$worker_vm_delete_title\"" \
-	"\"6\"" "\"$worker_vm_manage_iso_title\"" \
-	"\"7\"" "\"------------\"" \
-	"\"8\"" "\"Exit Install\""
+	"1" "$worker_vm_list_title" \
+	"2" "$worker_vm_create_title" \
+	"3" "$worker_vm_modify_title" \
+	"4" "$worker_vm_startstop_title" \
+	"5" "$worker_vm_delete_title" \
+	"6" "$worker_vm_manage_iso_title" \
+	"7" "------------" \
+	"8" "Exit Install"
 	case $ANSWER_OPTION in
 	"1")
 		;;

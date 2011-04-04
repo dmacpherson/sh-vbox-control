@@ -350,7 +350,7 @@ _${LIBUI_UI}_follow_progress "$@"
 # returns: whatever dialog did
 _dia_dialog()
 {
-	dialog --backtitle "$TITLE" --aspect 15 "$@" 3>&1 1>&2 2>&3 3>&-
+	${DIACMD} --backtitle "$TITLE" --aspect 15 "$@" 3>&1 1>&2 2>&3 3>&-
 }
 
 
@@ -469,10 +469,7 @@ shift 4
 CANCEL_LABEL=Cancel
 [ $TYPE == optional ] && CANCEL_LABEL='Skip'
 
-	dialog --backtitle "$TITLE" --aspect 15 "$@" 3>&1 1>&2 2>&3 3>&-
-
-
-ANSWER_OPTION=$(${DIACMD} --backtitle "$TITLE" --aspect 15 $DEFAULT --cancel-label $CANCEL_LABEL --colors --title " $DIA_MENU_TITLE " --menu "$LIBUI_DIA_MENU_TEXT $EXTRA_INFO" 0 0 0 "$@" 3>&1 1>&2 2>&3 3>&-)
+ANSWER_OPTION=$(_dia_dialog $DEFAULT --cancel-label $CANCEL_LABEL --colors --title " $DIA_MENU_TITLE " --menu "$LIBUI_DIA_MENU_TEXT $EXTRA_INFO" 0 0 0 "$@")
 local ret=$?
 debug 'UI' "dia_ask_option: ANSWER_OPTION: $ANSWER_OPTION, returncode (skip/cancel): $ret ($DIA_MENU_TITLE)"
 [ $TYPE == required ] && return $ret
