@@ -1,14 +1,5 @@
 #!/bin/bash
 EDITOR=nano
-BLOCK_ROLLBACK_USELESS=1
-
-# clock
-HARDWARECLOCK=
-TIMEZONE=
-
-# default filesystem specs (the + is bootable flag)
-# <mountpoint>:<partsize>:<fstype>[:+]
-DEFAULTFS="/boot:32:ext2:+ swap:256:swap /:7500:ext3 /home:*:ext3"
 
 worker_vm_list_title='List Virtual Machines'
 worker_vm_create_title='Create Virtual Machine'
@@ -16,6 +7,7 @@ worker_vm_modify_title='Modify Virtual Machine'
 worker_vm_startstop_title='Start/Stop Virtual Machine'
 worker_vm_delete_title='Delete Virtual Machine'
 worker_vm_manage_iso_title='Mount/Unmount ISO Image'
+
 start_interactive ()
 {
 	#####################
@@ -33,7 +25,7 @@ mainmenu()
 	default=no
 	[ -n "$NEXTITEM" ] && default="$NEXTITEM"
 
-	#TODO: why does a '2' appear instead of '' ??
+	#
 	ask_option $default "MAIN MENU" '' required \
 	"1" "$worker_vm_list_title" \
 	"2" "$worker_vm_create_title" \
@@ -45,7 +37,7 @@ mainmenu()
 	"8" "Exit Install"
 	case $ANSWER_OPTION in
 	"1")
-		;;
+		vbox_list_vms ;;
         "2")
 		;;
         "3")

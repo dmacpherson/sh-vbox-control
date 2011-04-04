@@ -9,7 +9,7 @@ LIB_CORE=$LIB_USER #Deprecated
 RUNTIME_DIR=/tmp/vboxsh
 LOG_DIR=/var/log/vboxsh
 LOGFILE=$LOG_DIR/vboxsh.log
-DISCLAIMER="Note that despite our careful coding and proper testing there may still be bugs in this software."
+DISCLAIMER="Note that despite our not-so-careful coding and proper testing there may still be bugs in this software."
 UI="dia"
 DIACMD="dialog"
 
@@ -37,6 +37,7 @@ libui_sh_init $UI
 load_lib lib-flowcontrol.sh
 load_lib lib-interactive.sh
 load_lib lib-misc.sh
+load_lib lib-vboxmanage.sh
 
 ###### perform actual logic ######
 echo "Welcome to $TITLE"
