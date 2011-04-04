@@ -1,7 +1,4 @@
 #!/bin/bash
-depend_procedure core base # esp for auto_{network,locale,fstab}, intro and set_clock workers
-
-
 EDITOR=nano
 BLOCK_ROLLBACK_USELESS=1
 
