@@ -3,7 +3,7 @@
 touch $
 vbox_list_vms ()
 {
-vm_list=$(`VBoxManager list vms | sort | sed 's/[\{\}]/\"/g'`)
+vm_list=$(`VBoxManage list vms | sort | sed 's/[\{\}]/\"/g'`)
 echo $vm_list >> /tmp/vm-manage.log
 exit
 }
