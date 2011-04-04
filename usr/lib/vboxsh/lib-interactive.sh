@@ -44,7 +44,7 @@ mainmenu()
 	"4" "$worker_vm_startstop_title" \
 	"5" "$worker_vm_delete_title" \
 	"6" "$worker_vm_manage_iso_title" \
-	"7" "$worker_install_bootloader_title" \
+	"7" " " \
 	"8" "Exit Install"
 	case $ANSWER_OPTION in
 	"1")
