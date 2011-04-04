@@ -1,9 +1,9 @@
 #!/bin/bash
 ###### vboxsh VirtualBox Management Library ######
-
+touch $
 vbox_list_vms ()
 {
 vm_list=$(`VBoxManages list vms | sort | sed 's/[\{\}]/\"/g'`)
-echo $vm_list >> $LOG_DIR/vm-manage.log
+echo $vm_list >> /tmp/vm-manage.log
 exit
 }
