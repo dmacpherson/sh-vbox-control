@@ -544,7 +544,7 @@ local default
 str=$1
 # If $2 contains an explicit 'no' we set defaultno for yesno dialog
 #[ "$2" == "no" ] && default="--defaultno"
-dialog $default --yesno "$str" 0 0 # returns 0 for yes, 1 for no
+${DIACMD} $default --yesno "$str" 0 0 # returns 0 for yes, 1 for no
 local ret=$?
 [ $ret -eq 0 ] && debug 'UI' "dia_ask_yesno: User picked YES"
 [ $ret -gt 0 ] && debug 'UI' "dia_ask_yesno: User picked NO"
