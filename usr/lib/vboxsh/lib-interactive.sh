@@ -2,8 +2,6 @@
 depend_procedure core base # esp for auto_{network,locale,fstab}, intro and set_clock workers
 
 
-# This is a port of the original /arch/setup script.  It doesn't use aif phases but uses it's own menu-based flow (phase) control
-
 EDITOR=nano
 BLOCK_ROLLBACK_USELESS=1
 
@@ -40,44 +38,33 @@ mainmenu()
 
 	#TODO: why does a '2' appear instead of '' ??
 	ask_option $default "MAIN MENU" '' required \
-	"1" "$worker_select_source_title" \
-	"2" "$worker_set_clock_title" \
-	"3" "$worker_prepare_disks_title" \
-	"4" "$worker_package_list_title" \
-	"5" "$worker_install_packages_title" \
-	"6" "$worker_configure_system_title" \
+	"1" "$worker_vm_list_title" \
+	"2" "$worker_vm_create_title" \
+	"3" "$worker_vm_modify_title" \
+	"4" "$worker_vm_startstop_title" \
+	"5" "$worker_vm_delete_title" \
+	"6" "$worker_vm_manage_iso_title" \
 	"7" "$worker_install_bootloader_title" \
 	"8" "Exit Install"
 	case $ANSWER_OPTION in
 	"1")
-		                                        execute worker select_source; local ret=$?; [ $ret -eq 0 -a "$var_PKG_SOURCE_TYPE" = net ] && execute worker select_source_extras_menu
-		                                                                                    [ $ret -eq 0 ] && execute worker runtime_packages             && NEXTITEM=2 ;;
-
+		;;
         "2")
-		                                        execute worker set_clock                                                                                  && NEXTITEM=3 ;;
+		;;
         "3")
-		                                        execute worker prepare_disks                                                                              && NEXTITEM=4 ;;
+		;;
         "4")
-		check_depend worker prepare_disks && \
-		check_depend worker select_source    && execute worker package_list                                                                               && NEXTITEM=5 ;;
+		;;
         "5")
-		check_depend worker package_list && \
-		check_depend worker select_source    && execute worker install_packages   && {                                    execute worker auto_fstab   ; \
-		                                                                                                                  execute worker auto_locale  ; \
-		                                                                                                                  execute worker auto_keymap_font;
-		                                                                                                                  true                        ; } && NEXTITEM=6 ;;
+		;;
         "6")
-		check_depend worker install_packages && execute worker auto_network && \
-		                                        execute worker configure_system   && {                                    execute worker mkinitcpio   ; \
-		                                                                                                                  execute worker locales      ;
-		                                                                                                                  execute worker initialtime  ;
-		                                                                                                                  true                        ; } && NEXTITEM=7 ;;
+		;;
         "7")
-		check_depend worker configure_system && execute worker install_bootloader                                                                         && NEXTITEM=8 ;;
+		;;
         "8")
-		notify "If the install finished successfully, you can now type 'reboot' to restart the system." && stop_installer ;;
+		notify "If the install finished successfully, you can now type 'reboot' to restart the system." && exit_vboxsh ;;
         *)
-		ask_yesno "Abort Installation?" && stop_installer ;;
+		ask_yesno "Abort Installation?" && exit_vboxsh ;;
     esac
 }
 

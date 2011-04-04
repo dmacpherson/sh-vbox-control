@@ -4,7 +4,7 @@
 ###### Set some default variables ######
 TITLE="Vbox Shell Control"
 LOG="/dev/tty7"
-LIB_USER=/usr/lib/vboxsh
+LIB_USER=~/projects/sh-vbox-control/usr/lib/vboxsh
 LIB_CORE=$LIB_USER #Deprecated
 RUNTIME_DIR=/tmp/vboxsh
 LOG_DIR=/var/log/vboxsh
@@ -17,10 +17,19 @@ export LC_COLLATE=C # for consistent sorting behavior
 #DEBUGGING Best not to fool around here.\
 LOG_TO_FILE=0
 
+# $1 library name   
+load_lib ()
+{
+	[ -z "$1" ] && die_error "load_library needs a library as \$1"
+	log "Loading library /libs/$1 ..."
+	lib=$LIB_USER/"$1"
+	
+	source $lib || die_error "Something went wrong while sourcing library $lib"
+}
 
 ###### Bootstrapping ######
 # source and assign default User Interface for libui.sh
-source $LIB_USER/libs/libui.sh
+source $LIB_USER/libui.sh
 libui_sh_init $UI
 
 load_lib lib-flowcontrol.sh
@@ -69,15 +78,6 @@ do
 
 done
 
-# $1 library name   
-load_lib ()
-{
-	[ -z "$1" ] && die_error "load_library needs a library as \$1"
-	log "Loading library /libs/$1 ..."
-	lib=$LIB_USER/"$1"
-	
-	source $lib || die_error "Something went wrong while sourcing library $lib"
-}
 
 start_interactive
 
