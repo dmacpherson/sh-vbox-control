@@ -39,8 +39,9 @@ mainmenu()
 	case $ANSWER_OPTION in
 	"1")
 		gen_vm_list
-                echo $vm_list >$TMPDIR/vmlistvar
-                ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" $($VMLIST);;
+		options="0 \"VM's Present\" \'\' required \"0\" \"Return To Main Menu\" "$VMLIST
+		ask_option options;;                
+		#ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" $VMLIST;;
         "2")
 		;;
         "3")
