@@ -44,7 +44,7 @@ mainmenu()
 		VBoxManage showvminfo "${ANSWER_OPTION}" | less
 		;;
         "2")
-		worker_create_vm
+		create_vm_settings
 		;;
         "3")
 		;;
@@ -80,7 +80,7 @@ worker_intro ()
 #   done
 #}
 
-worker_create_vm ()
+create_vm_settings ()
 {
    ###Clean creation slate, logic depends on "not-nulls"
    cvm_name=""
@@ -113,12 +113,13 @@ worker_create_vm ()
       cvm_hdd=${ANSWER_NUMBER}
    done
 
-   echo "You have selected the following settings for your new Virtual Machine"
-   echo "--------------------------"
-   echo "Name:         "${cvm_name}
-   echo "OS Type:      "${cvm_ostype}
-   echo "Memory:       "${cvm_mem}
-   echo "HDD:          "${cvm_hdd}
-
-   exit
+   while [ -z "$cvm_iso" ]
+   do
+      ask_string "Please enter the path to the CD/DVD Image you would like to use"
+      if [ -f "${ANSWER_STRING}" ]
+      then
+         cvm_iso=${ANSWER_STRING}
+      fi
+   done
+   run_controlled "create_vm" "worker_create_vm" "$TMPDIR/vm_create.log" "Creating VM..."
 }
