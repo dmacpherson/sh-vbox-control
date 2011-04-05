@@ -25,7 +25,7 @@ gen_vm_list ()
       
    done
    echo "-----------------"
-   echo ${vm_list} #> $TMPDIR/vmlistvarlib
+   echo "${vm_list}" #> $TMPDIR/vmlistvarlib
    echo "-----------------"
    exit
 }
