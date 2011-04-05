@@ -101,13 +101,13 @@ worker_create_vm ()
       cvm_ostype=${ANSWER_OPTION}
    done
 
-   while [ $cvm_mem <= 0 ]
+   while [ -z "$cvm_mem" ]
    do
       ask_number "Please enter the size of the virtual machine's memory in MiB (1024 = 1 Gib)"
       cvm_mem=${ANSWER_NUMBER}
    done
 
-   while [ $cvm_hdd <= 0 ]
+   while [ -z "$cvm_hdd" ]
    do
       ask_number "Please enter the size of the virtual machine's hard drive in MiB (1024 = 1 GiB)"
       cvm_hdd=${ANSWER_NUMBER}
