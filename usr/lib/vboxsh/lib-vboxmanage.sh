@@ -14,7 +14,7 @@ gen_vm_list ()
    VBoxManage -q list vms >$TMPDIR/vmlistoutput
    while read line
    do
-      tmp=${line#*\"}
+      tmp=${line#*\:}
       vmname=${tmp%\"*}
       state=`VBoxManage showvminfo "$vmname" | grep State`
       tmp=${state#*\:}
@@ -30,6 +30,7 @@ gen_vm_list ()
 
 # Generate list of OS types for VM Creation
 # List up to date as of VirtualBox 4
+# Marking 'gen_os_type' Deprecated --OF
 gen_os_type ()
 {
 ask_option 0 
@@ -97,3 +98,24 @@ ask_option 0
                 "L4" "L4" \
                 "QNX" "QNX"
 }
+
+
+### Queuery ostypes known to the version of virtualbox installed
+queuery_vbox_ostypes()
+{
+   VBoxManage list ostypes | grep ':' >$TMPDIR/ostypes
+   ### output of the call piped to stdin is in format:
+   # ID:           vbox_ostype
+   # Description:  friendly_name
+   pointer=0
+   # get raw output to process
+   while read line
+   do
+      tmp=${line#*\:}
+      type=`echo "$tmp" | sed 's/^ *//;s/ *$//'`
+      OSTYPES[pointer]=${type}
+      ((pointer++))
+   done < $TMPDIR/ostypes
+   ask_option 0 "Select an OS Type" '' required "0" "Other" "${OSTYPES[@]}"
+}
+

@@ -39,25 +39,12 @@ mainmenu()
 	case $ANSWER_OPTION in
 	"1")
 		gen_vm_list
-		#echo "--------------"
-		#echo "$VMLIST"
-		#echo "--------------"
-		#dumpargs $VMLIST
-		#exit
 		# TODO ADD LOADING DIALOG
 		ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" "${VMLIST[@]}"
 		VBoxManage showvminfo "${ANSWER_OPTION}" | less
 		;;
         "2")
-		ask_string "Please enter a name for the Virtual Machine." "Are you sure" "Are you sure?"
-		#if [ -n $ANSWER_STRING ]; then
-			vm_name=$ANSWER_STRING
-			get_os_type		
-				#if [ -n $ANSWER_OPTION ]; then
-				vm_ostype=$ANSWER_OPTION
-				ask_yesno "${vm_name} ${vm_ostype}" && echo "Blah"
-				#fi
-		#fi
+		worker_create_vm
 		;;
         "3")
 		;;
@@ -83,4 +70,55 @@ worker_intro ()
 }
 
 
+file_selector ()
+{
+   target="\/"
+   
+   while [ -d "$target" ]
+   do
+      
+   done
+}
 
+worker_create_vm ()
+{
+   ###Clean creation slate, logic depends on "not-nulls"
+   cvm_name=""
+   cvm_ostype=""
+   cvm_mem=""
+   cvm_hdd=""
+   cvm_iso=""
+
+   while [ -z "$cvm_name" ]
+   do
+      ask_string "Please enter a name for the Virtual Machine."
+      cvm_name=${ANSWER_STRING}
+   done
+
+   while [ -z "$cvm_ostype" ]
+   do
+      queuery_vbox_ostypes
+      cvm_ostype=${ANSWER_OPTION}
+   done
+
+   while [ $cvm_mem <= 0 ]
+   do
+      ask_number "Please enter the size of the virtual machine's memory in MiB (1024 = 1 Gib)"
+      cvm_mem=${ANSWER_NUMBER}
+   done
+
+   while [ $cvm_hdd <= 0 ]
+   do
+      ask_number "Please enter the size of the virtual machine's hard drive in MiB (1024 = 1 GiB)"
+      cvm_hdd=${ANSWER_NUMBER}
+   done
+
+   echo "You have selected the following settings for your new Virtual Machine"
+   echo "--------------------------"
+   echo "Name:         "${cvm_name}
+   echo "OS Type:      "${cvm_ostype}
+   echo "Memory:       "${cvm_mem}
+   echo "HDD:          "${cvm_hdd}
+
+   exit
+}
