@@ -70,15 +70,15 @@ worker_intro ()
 }
 
 
-file_selector ()
-{
-   target="\/"
-   
-   while [ -d "$target" ]
-   do
-      
-   done
-}
+#file_selector ()
+#{
+#   target="\/"
+#   
+#   while [ -d "$target" ]
+#   do
+#      
+#   done
+#}
 
 worker_create_vm ()
 {
