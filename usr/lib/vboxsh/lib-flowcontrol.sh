@@ -41,7 +41,21 @@ execute ()
 }
 
 
-
+check_depend_dialog ()
+{
+   check_cdialog=$(cdialog --help | grep -i "version")
+   if [ -z "$check_cdialog" ]
+   then
+      check_dialog=$(dialog --help | grep -i "cdialog")
+      if [ -z "$check_dialog" ]
+      then
+         DIACMD="dialog"
+      elif
+         UI="cli"
+      fi
+   elif
+      DIACMD="cdialog"
+   fi
 
 
 
