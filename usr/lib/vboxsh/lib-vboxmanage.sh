@@ -33,8 +33,7 @@ gen_vm_list ()
       
    done < $TMPDIR/vmlistoutput
 for i in "1 2 3 4 5 6"
-do
-echo "${pointer[$1]"
- exit  
-done
+{
+echo "${pointer[$1]"  
+}
 }
