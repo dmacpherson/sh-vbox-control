@@ -107,4 +107,10 @@ cleanup_runtime ()
 	rm -rf $TMPDIR/vboxsh-* &>/dev/null
 }
 
-dumpargs() { for i in "$@" ; do echo $i ; done ; }
+dumpargs() 
+{
+   for i in "$@"
+   do
+      echo $i
+   done
+}

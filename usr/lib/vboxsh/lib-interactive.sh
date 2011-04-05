@@ -39,6 +39,8 @@ mainmenu()
 	case $ANSWER_OPTION in
 	"1")
 		gen_vm_list
+		dumpargs $VMLIST
+		exit
 		ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" `for i in "$@"; do echo $i ; done ;`;;
         "2")
 		;;
