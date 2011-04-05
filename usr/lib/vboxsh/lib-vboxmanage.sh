@@ -32,8 +32,7 @@ gen_vm_list ()
       #echo "the contents of vm_list are: ${VMLIST}"
       
    done < $TMPDIR/vmlistoutput
-for i in "1 2 3 4 5 6"
-{
-echo "${pointer[$1]"  
-}
+echo "end"
+echo "${pointer[1]}"  
+
 }
