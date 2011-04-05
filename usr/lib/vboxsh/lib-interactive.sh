@@ -121,5 +121,5 @@ create_vm_settings ()
          cvm_iso=${ANSWER_STRING}
       fi
    done
-   run_controlled "create_vm" "worker_create_vm" "$TMPDIR/vm_create.log" "Creating VM..."
+   run_controlled "create_vm" worker_create_vm "$TMPDIR/vm_create.log" "Creating VM..."
 }
