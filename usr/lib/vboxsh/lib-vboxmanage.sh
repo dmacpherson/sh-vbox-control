@@ -25,7 +25,7 @@ gen_vm_list ()
       echo "$pointer"
       VMLIST[pointer]=${state}
       ((pointer++))
-      echo "$pointer"
+      echo ${VMLIST}
       #echo "\"$vmname\" \"$state\" \\" >> $TMPDIR/vmlist
       #echo "my name is: ${vmname} and my state is: ${state}"
       #VMLIST=${VMLIST}"\""$vmname"\" \""$state\"" "
