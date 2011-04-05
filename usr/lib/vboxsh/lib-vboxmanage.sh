@@ -22,7 +22,7 @@ gen_vm_list ()
       echo "\"$vmname\" \"$state\" \\" >> $TMPDIR/vmlist
       echo "my name is: ${vmname} and my state is: ${state}"
       vm_list=${vm_list}"p"$vmname" "$state
-      echo "the contents of vm_list are: ${vmlist}"
+      echo "the contents of vm_list are: ${vm_list}"
       
    done
    echo "-----------------"
