@@ -11,7 +11,8 @@ gen_vm_list ()
    # vmlist for the calling function to use.
    > $TMPDIR/vboxlist.tmp
   
-   VBoxManage -q list vms | while read line
+   VBoxManage -q list vms >$TMPDIR/vmlist
+   while read line
    do
       tmp=${line#*\"}
       vmname=${tmp%\"*}
