@@ -11,7 +11,7 @@ LOGDIR=/var/log/vboxsh
 LOGFILE=$LOGDIR/vboxsh.log
 DISCLAIMER="Note that despite our not-so-careful coding and proper testing there may still be bugs in this software."
 UI="dia"
-DIACMD="dialog"
+DIACMD="cdialog"
 
 
 export LC_COLLATE=C # for consistent sorting behavior

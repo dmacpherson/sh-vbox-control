@@ -44,9 +44,20 @@ mainmenu()
 		#echo "--------------"
 		#dumpargs $VMLIST
 		#exit
+		# TODO ADD LOADING DIALOG
 		ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" "${VMLIST[@]}"
-		exit ;;
+		VBoxManage showvminfo "${ANSWER_OPTION}" | less
+		;;
         "2")
+		ask_string "Please enter a name for the Virtual Machine." "Are you sure" "Are you sure?"
+		#if [ -n $ANSWER_STRING ]; then
+			vm_name=$ANSWER_STRING
+			get_os_type		
+				#if [ -n $ANSWER_OPTION ]; then
+				vm_ostype=$ANSWER_OPTION
+				ask_yesno "${vm_name} ${vm_ostype}" && echo "Blah"
+				#fi
+		#fi
 		;;
         "3")
 		;;
