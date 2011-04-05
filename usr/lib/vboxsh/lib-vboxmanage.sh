@@ -20,5 +20,4 @@ gen_vm_list ()
       state=`echo "$state" | sed 's/^ *//;s/ *$//'`
       echo "\"$vmname\" \"$state\" \\" >> $TMPDIR/vmlist
    done
-exit
 }
