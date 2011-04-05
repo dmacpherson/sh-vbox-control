@@ -3,6 +3,7 @@
 
 vbox_list_vms ()
 {
+vm_list=""
 VBoxManage list vms --long > $TMPDIR/vmlist.tmp
 
 for name in $(cat $TMPDIR/vmlist.tmp | grep "Name: " | sed s/^Name:[\s+]//g) 
