@@ -21,9 +21,9 @@ gen_vm_list ()
       state=${tmp%\(*}
       state=`echo "$state" | sed 's/^ *//;s/ *$//'`
       VMLIST[pointer]=${vmname}
-      pointer++
+      ((pointer++))
       VMLIST[pointer]=${state}
-      pointer++
+      ((pointer++))
       #echo "\"$vmname\" \"$state\" \\" >> $TMPDIR/vmlist
       #echo "my name is: ${vmname} and my state is: ${state}"
       #VMLIST=${VMLIST}"\""$vmname"\" \""$state\"" "
