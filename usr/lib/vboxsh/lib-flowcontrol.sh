@@ -47,7 +47,7 @@ check_depend_dialog ()
    if [ -z "$check_cdialog" ]
    then
       check_dialog=$(dialog --help | grep -i "cdialog")
-      if [ -z "$check_dialog" ]
+      if [ -n "$check_dialog" ]
       then
          DIACMD="dialog"
       else
@@ -56,6 +56,7 @@ check_depend_dialog ()
    else
       DIACMD="cdialog"
    fi
+
 }
 
 
