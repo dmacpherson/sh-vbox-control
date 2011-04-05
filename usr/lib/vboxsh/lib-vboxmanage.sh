@@ -11,7 +11,7 @@ gen_vm_list ()
    # vmlist for the calling function to use.
    > $TMPDIR/vboxlist.tmp
   
-   VBoxManage -q list vms >$TMPDIR/vmlist
+   VBoxManage -q list vms >$TMPDIR/vmlistoutput
    while read line
    do
       tmp=${line#*\"}
@@ -25,7 +25,7 @@ gen_vm_list ()
       VMLIST=${VMLIST}" "$vmname" "$state
       echo "the contents of vm_list are: ${VMLIST}"
       
-   done <$TMPDIR/vmlist
+   done <$TMPDIR/vmlistoutput
    echo "-----------------"
    echo $VMLIST #> $TMPDIR/vmlistvarlib
    echo "-----------------"
