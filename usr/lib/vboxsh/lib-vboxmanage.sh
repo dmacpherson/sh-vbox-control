@@ -20,14 +20,11 @@ gen_vm_list ()
       tmp=${state#*\:}
       state=${tmp%\(*}
       state=`echo "$state" | sed 's/^ *//;s/ *$//'`
-      echo "\"$vmname\" \"$state\" \\" >> $TMPDIR/vmlist
-      echo "my name is: ${vmname} and my state is: ${state}"
+      #echo "\"$vmname\" \"$state\" \\" >> $TMPDIR/vmlist
+      #echo "my name is: ${vmname} and my state is: ${state}"
       VMLIST=${VMLIST}" "$vmname" "$state
-      echo "the contents of vm_list are: ${VMLIST}"
+      #echo "the contents of vm_list are: ${VMLIST}"
       
    done < $TMPDIR/vmlistoutput
-   echo "-----------------"
-   echo $VMLIST #> $TMPDIR/vmlistvarlib
-   echo "-----------------"
-   exit
+   
 }
