@@ -8,6 +8,7 @@ title_vm_startstop='Start/Stop Virtual Machine'
 title_vm_delete='Delete Virtual Machine'
 title_vm_manage_iso='Mount/Unmount ISO Image'
 title_exit='Exit'
+vm_list=""
 start_interactive ()
 {
 	#####################
@@ -39,8 +40,7 @@ mainmenu()
 	"1")
 		gen_vm_list
                 ask_option 0 "VM's Present" '' required \
-                "0" "Return To Main Menu" \
-                $(cat $TMPDIR/vmlist) ;;
+                "0" "Return To Main Menu" $vm_list;;
         "2")
 		;;
         "3")
