@@ -10,7 +10,7 @@ gen_vm_list ()
    # all the while cleaning up text and pass it out into
    # vmlist for the calling function to use.
    > $TMPDIR/vboxlist.tmp
-   vm_list=""
+   #vm_list=""
    VBoxManage -q list vms | while read line
    do
       tmp=${line#*\"}
@@ -21,11 +21,11 @@ gen_vm_list ()
       state=`echo "$state" | sed 's/^ *//;s/ *$//'`
       echo "\"$vmname\" \"$state\" \\" >> $TMPDIR/vmlist
       echo "my name is: ${vmname} and my state is: ${state}"
-      vm_list=${vmname}
+      vms_list=${vmname}
       
    done
    echo "-----------------"
-   echo "${vm_list}" #> $TMPDIR/vmlistvarlib
+   echo "${vms_list}" #> $TMPDIR/vmlistvarlib
    echo "-----------------"
    exit
 }
