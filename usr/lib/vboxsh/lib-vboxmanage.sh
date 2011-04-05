@@ -20,6 +20,7 @@ gen_vm_list ()
       state=${tmp%\(*}
       state=`echo "$state" | sed 's/^ *//;s/ *$//'`
       echo "\"$vmname\" \"$state\" \\" >> $TMPDIR/vmlist
+      echo "my name is: ${vmname} and my state is: ${state}"
       vm_list=${vmlist}" \""${vmname}"\" \""${state}\"
    done
    echo "-----------------"
