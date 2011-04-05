@@ -37,10 +37,10 @@ mainmenu()
 	"8" "$title_exit"
 	case $ANSWER_OPTION in
 	"1")
-		gen_vm_list ;;
+		gen_vm_list
                 ask_option 0 "VM's Present" '' required \
                 "0" "Return To Main Menu" \
-                $(cat $TMPDIR/vmlist)
+                $(cat $TMPDIR/vmlist) ;;
         "2")
 		;;
         "3")
