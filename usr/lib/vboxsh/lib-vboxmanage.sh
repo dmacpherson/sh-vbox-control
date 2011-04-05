@@ -26,6 +26,4 @@ gen_vm_list ()
       ((pointer++))
    done < $TMPDIR/vmlistoutput
 
-echo ${VMLIST[@]:0} 
-exit
 }

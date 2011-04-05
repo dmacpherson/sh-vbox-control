@@ -44,7 +44,7 @@ mainmenu()
 		#echo "--------------"
 		#dumpargs $VMLIST
 		#exit
-		ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" "${options[@]}"
+		ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" "${VMLIST[@]}"
 		exit ;;
         "2")
 		;;
