@@ -3,11 +3,11 @@
 
 vbox_list_vms ()
 {
-vm_longlist=$(VBoxManage list vms --long)
-vm_list=""
-for name in $(grep "Name: " <<$vm_list | sed s/^Name:[\s+]//g) 
+VBoxManage list vms --long > $TMPDIR/vmlist.tmp
+
+for name in $(cat $TMPDIR/vmlist.tmp | grep "Name: " | sed s/^Name:[\s+]//g) 
 do
-    for state in $(grep "State: " <<$vm_list | sed s/^State:[\s+]//g) 
+    for state in $(cat $TMPDIR/vmlist.tmp | grep "State: " <<$vm_list | sed s/^State:[\s+]//g) 
     do
         vm_list="$vmlist\"$name\" \"$state\"" 
     done
