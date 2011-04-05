@@ -7,11 +7,11 @@ vbox_list_vms ()
    do
       tmp=${line#*\"}
       vmname=${tmp%\"*}
-      state=`VBoxManage showvminfo '$vmname' | grep State`
+      state=`VBoxManage showvminfo "$vmname" | grep State`
       tmp=${state#*\:}
       state=${tmp%\(*}
-      state=`echo "$state" | sed s/^\s+|\s+$//`
-      #echo "\"$vmname\" \"$state\" \\" >> $TMPDIR/vboxlist.tmp
+      state=`echo "$state" | sed -e 's/^[ \t]*//'`
+      echo "\"$vmname\" \"$state\" \\" >> $TMPDIR/vboxlist.tmp
    done
 exit
 }
