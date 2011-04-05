@@ -25,7 +25,7 @@ gen_vm_list ()
       VMLIST=${VMLIST}" "$vmname" "$state
       echo "the contents of vm_list are: ${VMLIST}"
       
-   done
+   done <$TMPDIR/vmlist
    echo "-----------------"
    echo $VMLIST #> $TMPDIR/vmlistvarlib
    echo "-----------------"
