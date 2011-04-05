@@ -111,7 +111,7 @@ dumpargs() { for i in "$@" ; do echo $i ; done ; }
 
 
 # OS type list as of VirtualBox 4.0.0
-get_os_types ()
+get_os_type ()
 {
 askoption 0 "Select the Virtual Machines OS type." '' required "0" "Cancel" \
 		"Windows31" "Windows 3.1" \
