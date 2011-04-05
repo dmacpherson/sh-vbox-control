@@ -56,7 +56,7 @@ check_depend_dialog ()
    else
       DIACMD="cdialog"
    fi
-
+}
 
 
 # $1 exit code (optional)
