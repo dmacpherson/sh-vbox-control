@@ -34,7 +34,7 @@ mainmenu()
 	"4" "$title_vm_startstop" \
 	"5" "$title_vm_delete" \
 	"6" "$title_vm_manage_iso" \
-	"7" "------------" \
+	"7" "TESTING MKINITCPIO" \
 	"8" "$title_exit"
 	case $ANSWER_OPTION in
 	"1")
@@ -55,7 +55,7 @@ mainmenu()
         "6")
 		;;
         "7")
-		;;
+		run_controlled mkinitcpio "chroot $var_TARGET_DIR /sbin/mkinitcpio -p kernel26" $TMP_MKINITCPIO_LOG "Rebuilding initcpio images ..." ;;
         "8")	#TODO do any cleanups and wait for any open PID's that need monitoring.
 		exit_vboxsh ;;
         *)
