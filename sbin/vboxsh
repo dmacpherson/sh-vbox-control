@@ -16,7 +16,8 @@ DIACMD="dialog"
 
 export LC_COLLATE=C # for consistent sorting behavior
 
-#DEBUGGING Best not to fool around here.\
+###### DEBUGGING #######
+
 LOG_TO_FILE=0
 
 # $1 library name   
