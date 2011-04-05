@@ -3,10 +3,11 @@
 usage ()
 {
 	msg="vboxsh -[idlh]
-    -i <dia/cli>         Override interface type (optional) default=dia
-    -d                   Explicitly enable debugging (/var/log/vboxsh/debug.log) (optional)
-    -l                   Explicitly enable logging to file (/var/log/vboxsh/vboxsh.log) (optional)
-    -h                   Help: show usage  (optional)\n"
+    -i <dia/cli>         Override interface type default=dia
+    -d                   Explicitly enable debugging (/var/log/vboxsh/debug.log)
+    -l                   Explicitly enable logging to file
+                         ($LOGFILE)
+    -h                   Help: show usage\n"
 
 	echo -e "$msg"
 }
@@ -44,7 +45,6 @@ execute ()
 
 
 
-# use this function to stop the installation procedure.
 # $1 exit code (optional)
 exit_vboxsh ()
 {

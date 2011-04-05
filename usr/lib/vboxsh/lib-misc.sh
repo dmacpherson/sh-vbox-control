@@ -52,7 +52,7 @@ run_background ()
 
 	debug 'MISC' "run_background called. identifier: $1, command: $2, logfile: $3"
 	( \
-		touch $RUNTIME_DIR/vboxsh-$1-running
+		touch $TMPDIR/vboxsh-$1-running
 		debug 'MISC' "run_background starting $1: $2 >>$3 2>&1"
 		[ -f $3 ] && echo -e "\n\n\n" >>$3
 		echo "STARTING $1 . Executing $2 >>$3 2>&1\n" >> $3;
@@ -60,7 +60,7 @@ run_background ()
 		BACKGROUND_EXIT=$?
 		debug 'MISC' "run_background done with $1: exitcode (\$$1_exitcode): ${!var_exit} .Logfile $3"
 		echo >> $3   
-		rm -f $RUNTIME_DIR/vboxsh-$1-running
+		rm -f $TMPDIR/vboxsh-$1-running
 	) &
 	BACKGROUND_PID=$!
 
@@ -75,7 +75,7 @@ wait_for ()
 {
 	[ -z "$1" ] && die_error "wait_for needs an identifier to know which command to wait on!"
 
-	while [ -f $RUNTIME_DIR/vboxsh-$1-running ]
+	while [ -f $TMPDIR/vboxsh-$1-running ]
 	do
 		sleep 1
 	done
@@ -103,8 +103,8 @@ check_is_in ()
 # cleans up file in the runtime directory who can be deleted, make dir first if needed
 cleanup_runtime ()
 {
-	mkdir -p $RUNTIME_DIR || die_error "Cannot create $RUNTIME_DIR"
-	rm -rf $RUNTIME_DIR/vboxsh-* &>/dev/null
+	mkdir -p $TMPDIR || die_error "Cannot create $TMPDIR"
+	rm -rf $TMPDIR/vboxsh-* &>/dev/null
 }
 
 
