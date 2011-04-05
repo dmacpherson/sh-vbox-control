@@ -22,7 +22,7 @@ gen_vm_list ()
       state=`echo "$state" | sed 's/^ *//;s/ *$//'`
       #echo "\"$vmname\" \"$state\" \\" >> $TMPDIR/vmlist
       #echo "my name is: ${vmname} and my state is: ${state}"
-      VMLIST=${VMLIST}"\""$vmname"\" \""$state" "
+      VMLIST=${VMLIST}"\""$vmname"\" \""$state\" "
       #echo "the contents of vm_list are: ${VMLIST}"
       
    done < $TMPDIR/vmlistoutput
