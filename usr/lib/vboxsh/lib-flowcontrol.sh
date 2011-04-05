@@ -50,10 +50,10 @@ check_depend_dialog ()
       if [ -z "$check_dialog" ]
       then
          DIACMD="dialog"
-      elif
+      else
          UI="cli"
       fi
-   elif
+   else
       DIACMD="cdialog"
    fi
 
