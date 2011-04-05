@@ -32,7 +32,7 @@ mainmenu()
 	"3" "$title_vm_modify" \
 	"4" "$title_vm_startstop" \
 	"5" "$title_vm_delete" \
-	"6" "$title_vm_manage" \
+	"6" "$title_vm_manage_iso" \
 	"7" "------------" \
 	"8" "$title_exit"
 	case $ANSWER_OPTION in
