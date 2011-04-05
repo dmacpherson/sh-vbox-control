@@ -44,7 +44,7 @@ mainmenu()
 		echo "--------------"
 		dumpargs $VMLIST
 		exit
-		ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" `for i in "$@"; do echo $i ; done ;`;;
+		ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" `dumpargs $VMLIST`;;
         "2")
 		;;
         "3")
