@@ -21,5 +21,6 @@ gen_vm_list ()
       state=`echo "$state" | sed 's/^ *//;s/ *$//'`
       echo "\"$vmname\" \"$state\" \\" >> $TMPDIR/vmlist
       vm_list='$vmlist "$vmname" "@state"'
+      echo $vm_list > $TMPDIR/vmlistvarlib
    done
 }
