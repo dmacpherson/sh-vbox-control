@@ -22,6 +22,8 @@ gen_vm_list ()
       echo "\"$vmname\" \"$state\" \\" >> $TMPDIR/vmlist
       vm_list="${vmlist} \"${vmname}\" \"${state}\""
    done
-   echo $vm_list > $TMPDIR/vmlistvarlib
-
+   echo "-----------------"
+   echo '$vm_list' #> $TMPDIR/vmlistvarlib
+   echo "-----------------"
+   exit
 }
