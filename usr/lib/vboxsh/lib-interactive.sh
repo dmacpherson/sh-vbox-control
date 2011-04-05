@@ -55,7 +55,7 @@ mainmenu()
         "6")
 		;;
         "7")
-		run_controlled mkinitcpio "chroot $var_TARGET_DIR /sbin/mkinitcpio -p kernel26" $TMP_MKINITCPIO_LOG "Rebuilding initcpio images ..." ;;
+		run_controlled mkinitcpio "chroot $var_TARGET_DIR /sbin/mkinitcpio -p kernel26" $TMPDIR/mkinit.log "Rebuilding initcpio images ..." ;;
         "8")	#TODO do any cleanups and wait for any open PID's that need monitoring.
 		exit_vboxsh ;;
         *)
