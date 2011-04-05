@@ -34,5 +34,5 @@ gen_vm_list ()
    done < $TMPDIR/vmlistoutput
 echo "end"
 echo "${pointer[1]}"  
-
+exit
 }
