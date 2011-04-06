@@ -55,6 +55,13 @@ mainmenu()
         "3")
 		;;
         "4")
+                gen_vm_list
+                # TODO ADD LOADING DIALOG
+                ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" "${VMLIST[@]}"
+		machine_name_temp=$ANSWER_OPTION
+		ask_option 1 "Select action to perform" '' required "0" "Return to Main Menu" "1" "pause" "2" "resume" "3" "reset" "4" "poweroff" "5" "savestate" 
+"6" "acpipowerbutton" "7" "acpisleepbutton"
+		ask_yesno "Do you want to $ANSWER_OPTION on the VM named $machine_name_temp" && VBoxManage controlvm $machine_name_temp $ANSWER_OPTION
 		;;
         "5")
 		;;
@@ -124,10 +131,12 @@ create_vm_settings ()
    cvm_mem=""
    cvm_hdd=""
    cvm_iso=""
+   exitcode=0
 
-   while [ -z "$cvm_name" ]
+   while [[ -z "$cvm_name" && "$exitcode" -ne 1 ]] 
    do
       ask_string "Please enter a name for the Virtual Machine."
+      dialog --msgbox "$exitcode" 10 30
       cvm_name=${ANSWER_STRING}
    done
 
@@ -158,4 +167,5 @@ create_vm_settings ()
       fi
    done
    worker_create_vm
+
 }
