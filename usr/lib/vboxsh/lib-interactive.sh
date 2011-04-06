@@ -88,10 +88,12 @@ create_vm_settings ()
    cvm_mem=""
    cvm_hdd=""
    cvm_iso=""
+   exitcode=0
 
-   while [ -z "$cvm_name" ]
+   while [[ -z "$cvm_name" && "$exitcode" -ne 1 ]] 
    do
       ask_string "Please enter a name for the Virtual Machine."
+      dialog --msgbox "$exitcode" 10 30
       cvm_name=${ANSWER_STRING}
    done
 
@@ -122,4 +124,5 @@ create_vm_settings ()
       fi
    done
    worker_create_vm
+
 }
