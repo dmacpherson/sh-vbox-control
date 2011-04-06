@@ -55,6 +55,16 @@ mainmenu()
         "3")
 		;;
         "4")
+                gen_vm_list
+                # TODO ADD LOADING DIALOG
+                ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" "${VMLIST[@]}"
+                echo "#########################################" > $TMPDIR/vminfo
+                echo "# VM Info for machine \""$ANSWER_OPTION"\"" >> $TMPDIR/vminfo
+                echo "# NOTE: This is not an editable configuration" >> $TMPDIR/vminfo
+                echo "# Provided by: VBoxManage showvminfo \""${ANSWER_OPTION}"\"" >> $TMPDIR/vminfo
+                echo "# Press 'Q' to Quit" >> $TMPDIR/vminfo
+                echo "#########################################" >> $TMPDIR/vminfo
+		ask_yesno "Is $ANSWER_OPTION the right VM?" && VBoxManage controlvm $ANSWER_OPTION savestate
 		;;
         "5")
 		;;
