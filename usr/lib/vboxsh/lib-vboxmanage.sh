@@ -14,7 +14,7 @@ gen_vm_list ()
    VBoxManage -q list vms >$TMPDIR/vmlistoutput
    while read line
    do
-      tmp=${line#*\:}
+      tmp=${line#*\"}
       vmname=${tmp%\"*}
       state=`VBoxManage showvminfo "$vmname" | grep State`
       tmp=${state#*\:}
@@ -25,7 +25,7 @@ gen_vm_list ()
       VMLIST[pointer]=${state}
       ((pointer++))
    done < $TMPDIR/vmlistoutput
-exit
+
 }
 
 
