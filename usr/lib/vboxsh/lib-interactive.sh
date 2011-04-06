@@ -58,6 +58,10 @@ mainmenu()
                 gen_vm_list
                 # TODO ADD LOADING DIALOG
                 ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" "${VMLIST[@]}"
+		if [ $ANSWER_OPTION = "0" ]
+			then
+				return
+		fi
                 machine_name_temp=$ANSWER_OPTION
                 start_stop_vm
 		;;
