@@ -58,10 +58,8 @@ mainmenu()
                 gen_vm_list
                 # TODO ADD LOADING DIALOG
                 ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" "${VMLIST[@]}"
-		machine_name_temp=$ANSWER_OPTION
-		ask_option 1 "Select action to perform" '' required "0" "Return to Main Menu" "1" "pause" "2" "resume" "3" "reset" "4" "poweroff" "5" "savestate" 
-"6" "acpipowerbutton" "7" "acpisleepbutton"
-		ask_yesno "Do you want to $ANSWER_OPTION on the VM named $machine_name_temp" && VBoxManage controlvm $machine_name_temp $ANSWER_OPTION
+                machine_name_temp=$ANSWER_OPTION
+                start_stop_vm
 		;;
         "5")
 		;;
@@ -136,3 +134,51 @@ create_vm_settings ()
 
 #worker_create_vm &> $TMPDIR/createvm | dialog --tailbox /$TMPDIR/createvm 0 0
 }
+
+start_stop_vm ()
+{
+        default=no
+        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
+        ask_option $default "MAIN MENU" '' required \
+        "1" "Pause" \
+        "2" "Resume" \
+        "3" "Reset" \
+        "4" "Power Off" \
+        "5" "Save State" \
+        "6" "ACPI Power Button" \
+        "7" "ACPI Sleep Button" \
+#       VM_ACTION='notset'
+        case $ANSWER_OPTION in
+                "1")
+                        $VM_ACTION="pause"
+                        ;;
+                "2")
+                        $VM_ACTION="resume"
+                        ;;
+                "3")
+                        $VM_ACTION="reset"
+                        ;;
+                "4")
+                        $VM_ACTION="poweroff"
+                        ;;
+                "5")
+                        $VM_ACTION="savestate"
+                        ;;
+                "6")
+                        $VM_ACTION="acpipowerbutton"
+                        ;;
+                "7")
+                        $VM_ACTION="acpisleepbutton"
+                        ;;
+                *)
+                        #ask_yesno "Do you want to $VM_ACTION on the VM named $machine_name_temp" && VBoxManage controlvm $machine_name_temp $VM_ACTION
+                        ;;
+        esac
+
+        ask_yesno "Do you want to $VM_ACTION on the VM named $machine_name_temp" && VBoxManage controlvm $machine_name_temp $VM_ACTION
+
+#ask_option 1 "Select action to perform" '' required "0" "Return to Main Menu" "1" "pause" "2" "resume" "3" "reset" "4" "poweroff" "5" "savestate" "6" "acpipowerbutton" "7" "acpis$
+#ask_yesno "Do you want to $ANSWER_OPTION on the VM named $machine_name_temp" && VBoxManage controlvm $machine_name_temp $ANSWER_OPTION
+
+}
+
