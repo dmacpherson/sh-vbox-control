@@ -58,6 +58,47 @@ done
 return 1
 }
 
+file_selector ()
+{
+   dirup=".."
+   dirreload="."
+   target="/"
+   unset FLIST
+   #echo "my target is: "$target
+   #exit
+   while [ -d "$target" ]
+   do
+      unset FLIST
+      echo "${dirreload}" > $TMPDIR/flist
+      echo "$dirup" >> $TMPDIR/flist
+      ls -l "${target}" | grep ^d | awk '{print $9"/"}' >> $TMPDIR/flist
+      ls -l "${target}" | grep ^- | awk '{print "  "$9}' >> $TMPDIR/flist
+      pointer=0  
+      while read line
+      do
+         FLIST[pointer]=${line}
+         ((pointer++))
+         FLIST[pointer]=" "
+         ((pointer++))
+      done < $TMPDIR/flist
+      
+      ask_option 0 "Select a File" "You're current working directory is \"${target}\"" required "${FLIST[@]}"
+      target=${target}${ANSWER_OPTION}
+            
+      if [ -n "$(echo "${target}" | grep '\.\.$')" ]
+      then
+         target=${target%\/*/*}
+         target="${target}/"
+      fi
+      if [ -n "$(echo "${target}" | grep '\.$')" ]
+      then
+         target=${target%\/*}
+         target="${target}/"
+      fi
+   done
+}
+
+
 # prompts user to choose an editor, and exports $EDITOR
 # the list of choices is automatically adapted based on locally available editors
 # if $EDITOR is non-empty and found, we return right away, unless $1 is 'force'
