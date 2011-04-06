@@ -41,7 +41,13 @@ mainmenu()
 		gen_vm_list
 		# TODO ADD LOADING DIALOG
 		ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" "${VMLIST[@]}"
-		VBoxManage showvminfo "${ANSWER_OPTION}" | less
+		echo "#########################################\
+                     # VM Info for machine \'"$ANSWER_OPTION"\
+                     # NOTE: This is not an editable configuration\
+                     # Provided by: VBoxManage showvminfo \""${ANSWER_OPTION}"\"\
+                     # Press 'Q' to Quit\
+                     #########################################\n\n\n" &&\
+                     VBoxManage showvminfo "${ANSWER_OPTION}" | less
 		;;
         "2")
 		create_vm_settings
