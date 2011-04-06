@@ -8,7 +8,7 @@ title_vm_startstop='Start/Stop Virtual Machine'
 title_vm_delete='Delete Virtual Machine'
 title_vm_manage_iso='Mount/Unmount ISO Image'
 title_exit='Exit'
-vm_list=""
+
 start_interactive ()
 {
 	#####################
@@ -134,6 +134,7 @@ create_vm_settings ()
 
 #worker_create_vm &> $TMPDIR/createvm | dialog --tailbox /$TMPDIR/createvm 0 0
 }
+
 
 start_stop_vm ()
 {

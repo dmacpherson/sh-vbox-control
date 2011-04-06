@@ -50,7 +50,7 @@ queuery_vbox_ostypes ()
 
 worker_create_vm ()
 {
-   VBoxManage -q createvm --name "$cvm_name" --ostype "$cvm_ostype" --register
+   VBoxManage -q createvm --name "$cvm_name" --ostype "$cvm_ostype" --register 
    VBoxManage -q modifyvm "$cvm_name" --memory $cvm_mem --acpi on --boot1 dvd --nic1 nat --hwvirtex on --pae on
    VBoxManage -q storagectl "$cvm_name" --name "IDE Controller" --add ide 
    VBoxManage -q createvdi -filename "/mnt/raid/tmp/$cvm_name.vdi" -size $cvm_hdd --register
