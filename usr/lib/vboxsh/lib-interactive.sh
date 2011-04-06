@@ -140,45 +140,45 @@ start_stop_vm ()
         default=no
         [ -n "$NEXTITEM" ] && default="$NEXTITEM"
         ask_option $default "MAIN MENU" '' required \
-        "1" "Pause" \
-        "2" "Resume" \
-        "3" "Reset" \
-        "4" "Power Off" \
-        "5" "Save State" \
-        "6" "ACPI Power Button" \
-        "7" "ACPI Sleep Button" \
-#       VM_ACTION='notset'
+	"1" "Start VM" \
+        "2" "Pause" \
+        "3" "Resume" \
+        "4" "Reset" \
+        "5" "Power Off" \
+        "6" "Save State" \
+        "7" "ACPI Power Button" \
+        "8" "ACPI Sleep Button" \
+
         case $ANSWER_OPTION in
                 "1")
-                        $VM_ACTION="pause"
+			### START VM HERE
+			### Need to create a function here to Start VM and ask for VNC port and password.
+			### Make sure we can then call this same function so after you create a vm you get an option to start it.
                         ;;
-                "2")
-                        $VM_ACTION="resume"
-                        ;;
+		"2")
+                        ask_yesno "Are you sure you want to Pause $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp pause
+			;;
                 "3")
-                        $VM_ACTION="reset"
+                        ask_yesno "Are you sure you want to Resume $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp resume
                         ;;
                 "4")
-                        $VM_ACTION="poweroff"
+                        ask_yesno "Are you sure you want to Reset $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp reset
                         ;;
                 "5")
-                        $VM_ACTION="savestate"
+                        ask_yesno "Are you sure you want to Power Off $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp poweroff
                         ;;
                 "6")
-                        $VM_ACTION="acpipowerbutton"
+                        ask_yesno "Are you sure you want to Save State $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp savestate
                         ;;
                 "7")
-                        $VM_ACTION="acpisleepbutton"
+                        ask_yesno "Are you sure you want to ACPI Power Button $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp acpipowerbutton
+                        ;;
+                "8")
+                        ask_yesno "Are you sure you want to ACPI Sleep Button $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp acpisleepbutton
                         ;;
                 *)
-                        #ask_yesno "Do you want to $VM_ACTION on the VM named $machine_name_temp" && VBoxManage controlvm $machine_name_temp $VM_ACTION
+                        ask_yesno "We shouldnt be here...answer_option $ANSWER_OPTION with machine_name_temp $machine_name_temp default $default"
                         ;;
         esac
-
-        ask_yesno "Do you want to $VM_ACTION on the VM named $machine_name_temp" && VBoxManage controlvm $machine_name_temp $VM_ACTION
-
-#ask_option 1 "Select action to perform" '' required "0" "Return to Main Menu" "1" "pause" "2" "resume" "3" "reset" "4" "poweroff" "5" "savestate" "6" "acpipowerbutton" "7" "acpis$
-#ask_yesno "Do you want to $ANSWER_OPTION on the VM named $machine_name_temp" && VBoxManage controlvm $machine_name_temp $ANSWER_OPTION
-
 }
 
