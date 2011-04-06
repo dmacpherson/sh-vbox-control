@@ -110,12 +110,12 @@ file_selector ()
       ask_option 0 "Select a File" "You're current working directory is \"${target}\"" required "${FLIST[@]}"
       target=${target}${ANSWER_OPTION}
             
-      if [ -n "$(echo "${target}" | grep '\.\.')" ]
+      if [ -n "$(echo "${target}" | grep '\.\.$')" ]
       then
          target=${target%\/*/*}
          target="${target}/"
       fi
-      if [ -n "$(echo "${target}" | grep '\.')" ]
+      if [ -n "$(echo "${target}" | grep '\.$')" ]
       then
          target=${target%\/*}
          target="${target}/"
