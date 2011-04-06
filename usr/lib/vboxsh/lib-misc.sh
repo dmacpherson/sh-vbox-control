@@ -21,10 +21,10 @@ run_controlled ()
 	fi
 	if [ "$var_UI_TYPE" = dia ]
 	then
-		run_background $1 "$2" $3
-		follow_progress " $4 " $3 $BACKGROUND_PID # dia mode ignores the pid. cli uses it to know how long it must do tail -f
-		wait_for $1 $FOLLOW_PID
-		CONTROLLED_EXIT=$BACKGROUND_EXIT
+		#run_background $1 "$2" $3
+		follow_progress $1 $2 $3 " $4 " #$BACKGROUND_PID # dia mode ignores the pid. cli uses it to know how long it must do tail -f
+		#wait_for $1 $FOLLOW_PID
+		#CONTROLLED_EXIT=$BACKGROUND_EXIT
 	else
 		notify "$4"
 		eval "$2" >>$3 2>&1

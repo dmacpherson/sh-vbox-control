@@ -323,14 +323,15 @@ _${LIBUI_UI}_ask_yesno "$@"
 
 
 # follow the progress of something by showing it's log, updating real-time
-# $1 title
-# $2 logfile
-# $3 pid to monitor. if process stopped, stop following (only used in cli mode)
+# $1 identifier
+# $2 command (will be eval'ed)
+# $3 logfile
+# $4 title to show while process is running
 follow_progress ()
 {
-[ -z "$1" ] && die_error "follow_progress needs a title!"
-[ -z "$2" ] && die_error "follow_progress needs a logfile to follow!"
-FOLLOW_PID=
+#[ -z "$1" ] && die_error "follow_progress needs a title!"
+#[ -z "$2" ] && die_error "follow_progress needs a logfile to follow!"
+#FOLLOW_PID=
 [ `type -t _${LIBUI_UI}_follow_progress` == function ] || die_error "_${LIBUI_UI}_follow_progress is not a function"
 _${LIBUI_UI}_follow_progress "$@"
 }
@@ -551,13 +552,16 @@ local ret=$?
 return $ret
 }
 
-
+# $1 identifier
+# $2 command (will be eval'ed)
+# $3 logfile
+# $4 title to show while process is running
 _dia_follow_progress ()
 {
 title=$1
 logfile=$2
 
-_dia_dialog --title "$1" --no-kill --tailboxbg "$2" 0 0 >$LIBUI_FOLLOW_PID
+`$2` | _dia_dialog --title "$1" --no-kill --tailboxbg "$2" 0 0 >$LIBUI_FOLLOW_PID
 FOLLOW_PID=`cat $LIBUI_FOLLOW_PID`
 rm $LIBUI_FOLLOW_PID
 

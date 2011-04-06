@@ -34,7 +34,7 @@ mainmenu()
 	"4" "$title_vm_startstop" \
 	"5" "$title_vm_delete" \
 	"6" "$title_vm_manage_iso" \
-	"7" "TESTING MKINITCPIO" \
+	"7" "-------------------" \
 	"8" "$title_exit"
 	case $ANSWER_OPTION in
 	"1")
@@ -55,7 +55,7 @@ mainmenu()
         "6")
 		;;
         "7")
-		run_controlled mkinitcpio "mkinitcpio -p kernel26" $TMPDIR/mkinit.log "Rebuilding initcpio images ..." ;;
+		;;
         "8")	#TODO do any cleanups and wait for any open PID's that need monitoring.
 		exit_vboxsh ;;
         *)
@@ -121,5 +121,5 @@ create_vm_settings ()
          cvm_iso=${ANSWER_STRING}
       fi
    done
-   worker_create_vm
+   run_controlled vmcreate worker_create_vm $TMPDIR/vm_create.$$.log ""
 }

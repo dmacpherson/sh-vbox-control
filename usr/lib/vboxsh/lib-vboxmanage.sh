@@ -50,7 +50,7 @@ queuery_vbox_ostypes ()
 
 worker_create_vm ()
 {
-   run_controlled vmcreate "VBoxManage -q createvm --name \"$cvm_name\" --ostype \"$cvm_ostype\" --register" $TMPDIR/vm_create.$$.log "Generating VM Machine"
+   "VBoxManage -q createvm --name \"$cvm_name\" --ostype \"$cvm_ostype\" --register"
    run_controlled vmcreate "VBoxManage -q modifyvm \"$cvm_name\" --memory $cvm_mem --acpi on --boot1 dvd --nic1 nat --hwvirtex on --pae on" $TMPDIR/vm_create.$$.log "Generating VM Machine"
    run_controlled vmcreate "VBoxManage -q storagectl \"$cvm_name\" --name \"IDE Controller\" --add ide" $TMPDIR/vm_create.$$.log "Generating VM Machine"
    run_controlled vmcreate "VBoxManage -q createvdi -filename \"/mnt/raid/tmp/$cvm_name.vdi\" -size $cvm_hdd --register" $TMPDIR/vm_create.$$.log "Generating VM Machine"
