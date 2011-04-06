@@ -50,10 +50,10 @@ queuery_vbox_ostypes ()
 
 worker_create_vm ()
 {
-   "VBoxManage -q createvm --name \"$cvm_name\" --ostype \"$cvm_ostype\" --register"
-   run_controlled vmcreate "VBoxManage -q modifyvm \"$cvm_name\" --memory $cvm_mem --acpi on --boot1 dvd --nic1 nat --hwvirtex on --pae on" $TMPDIR/vm_create.$$.log "Generating VM Machine"
-   run_controlled vmcreate "VBoxManage -q storagectl \"$cvm_name\" --name \"IDE Controller\" --add ide" $TMPDIR/vm_create.$$.log "Generating VM Machine"
-   run_controlled vmcreate "VBoxManage -q createvdi -filename \"/mnt/raid/tmp/$cvm_name.vdi\" -size $cvm_hdd --register" $TMPDIR/vm_create.$$.log "Generating VM Machine"
-   run_controlled vmcreate "VBoxManage -q storageattach \"$cvm_name\" --storagectl \"IDE Controller\" --port 0 --device 0 --type hdd --medium \"/mnt/raid/tmp/$cvm_name.vdi\"" $TMPDIR/vm_create.$$.log "Generating VM Machine"
-   run_controlled vmcreate "VBoxManage -q storageattach \"$cvm_name\" --storagectl \"IDE Controller\" --port 1 --device 0 --type dvddrive --medium \"$cvm_iso\"" $TMPDIR/vm_create.$$.log "Generating VM Machine"
+   VBoxManage -q createvm --name "$cvm_name" --ostype "$cvm_ostype" --register
+   VBoxManage -q modifyvm "$cvm_name" --memory $cvm_mem --acpi on --boot1 dvd --nic1 nat --hwvirtex on --pae on
+   VBoxManage -q storagectl "$cvm_name" --name "IDE Controller" --add ide 
+   VBoxManage -q createvdi -filename "/mnt/raid/tmp/$cvm_name.vdi" -size $cvm_hdd --register
+   VBoxManage -q storageattach "$cvm_name" --storagectl "IDE Controller" --port 0 --device 0 --type hdd --medium "/mnt/raid/tmp/$cvm_name.vdi"
+   VBoxManage -q storageattach "$cvm_name" --storagectl "IDE Controller" --port 1 --device 0 --type dvddrive --medium "$cvm_iso"
 }   

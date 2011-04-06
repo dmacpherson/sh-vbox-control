@@ -166,6 +166,5 @@ create_vm_settings ()
          cvm_iso=${ANSWER_STRING}
       fi
    done
-   worker_create_vm
-
+   worker_create_vm &> $TMPDIR/createvm | dialog --tailbox /$TMPDIR/createvm 0 0
 }
