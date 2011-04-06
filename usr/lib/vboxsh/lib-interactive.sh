@@ -137,6 +137,7 @@ create_vm_settings ()
 
 start_stop_vm ()
 {
+	vnc_port_num=""
         default=no
         [ -n "$NEXTITEM" ] && default="$NEXTITEM"
         ask_option $default "MAIN MENU" '' required \
@@ -154,6 +155,9 @@ start_stop_vm ()
 			### START VM HERE
 			### Need to create a function here to Start VM and ask for VNC port and password.
 			### Make sure we can then call this same function so after you create a vm you get an option to start it.
+			ask_string "Please Enter VNC Port #"
+			vnc_port_num=${ANSWER_STRING}
+			nohup /usr/local/bin/VBoxHeadless -s $machine_name_temp --vnc --vncport $ANSWER_STRING > /dev/null 2>&1 &
                         ;;
 		"2")
                         ask_yesno "Are you sure you want to Pause $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp pause
