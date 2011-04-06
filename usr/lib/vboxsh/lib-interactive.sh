@@ -58,7 +58,10 @@ mainmenu()
                 gen_vm_list
                 # TODO ADD LOADING DIALOG
                 ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" "${VMLIST[@]}"
-		ask_yesno "Is $ANSWER_OPTION the right VM?" && VBoxManage controlvm $ANSWER_OPTION savestate
+		machine_name_temp=$ANSWER_OPTION
+		ask_option 1 "Select action to perform" '' required "0" "Return to Main Menu" "1" "pause" "2" "resume" "3" "reset" "4" "poweroff" "5" "savestate" 
+"6" "acpipowerbutton" "7" "acpisleepbutton"
+		ask_yesno "Do you want to $ANSWER_OPTION on the VM named $machine_name_temp" && VBoxManage controlvm $machine_name_temp $ANSWER_OPTION
 		;;
         "5")
 		;;
