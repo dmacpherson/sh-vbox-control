@@ -25,7 +25,7 @@ gen_vm_list ()
       VMLIST[pointer]=${state}
       ((pointer++))
    done < $TMPDIR/vmlistoutput
-
+exit
 }
 
 
@@ -45,7 +45,6 @@ queuery_vbox_ostypes ()
       OSTYPES[pointer]=${type}
       ((pointer++))
    done < $TMPDIR/ostypes
-   exit
    ask_option 0 "Select an OS Type" '' required "0" "Other" "${OSTYPES[@]}"
 }
 
