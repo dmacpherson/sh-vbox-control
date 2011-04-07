@@ -14,7 +14,9 @@ alert_wait ()
 # $1 (suggested) location of stderr output or more information
 alert_error ()
 {
-   if [ -f $1 ] then _moreinfo="More information can be found in the file:\n$1" ; fi
+   if [ -f $1 ] 
+      then $1="More information can be found in the file:\n$1" 
+   fi
    inform "There was an error processing your request...\n\n$1"
 }
 

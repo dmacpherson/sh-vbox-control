@@ -188,7 +188,7 @@ show_registered ()
    do
       gen_vm_list
       # TODO ADD LOADING DIALOG
-      please_wait "Loading registered VMs..."
+      please_wait "Loading list of registered VMs..."
       ask_option 0 "This list shows currently registered VMs.\nPlease select one for more information..." '' required "0" "Return To Main Menu" "${VMLIST[@]}"
       if [ $ANSWER_OPTION ]; then return; fi
       worker_show_vm_info $ANSWER_OPTION
@@ -197,30 +197,67 @@ show_registered ()
 
 vm_manage_root ()
 {
+   _manage_options=("0" "Return to Main Menu"\
+                    "1" " "\
+                    "2" "Snapshots"\
+                    "3" " "\
+                    "4" " "\
+                    "5" " "\
+                    "6" " "\
+                    "7" " "\
+                    "8" " "\
+                    "9" " "\
+                    "10" " ")
+
    while true #Keep looping until they choose to return to main menu
    do 
-      please_wait "Loading registered VM's..."
+      please_wait "Loading list of registered VM's..."
       gen_vm_list
       ask_option 0 "Please select a VM to manage..." '' required "0" "Return To Main Menu" "${VMLIST[@]}"
       if [ $ANSWER_OPTION ]; then return; fi
-      vm=${ANSWER_OPTION}
+      vm_name=${ANSWER_OPTION}
       please_wait "Requesting detailed information on selected VM..."
-      if [ VBoxManage showvminfo "$ANSWER_OPTION" > $TMPDIR/vm=manage.$$ 2>$TMPDIR/vm-manage-err.$$ ]
+      if [ VBoxManage showvminfo "$vm" > $TMPDIR/vm-manage.$$ 2>$TMPDIR/vm-manage-err.$$ ]
       then
-         
+         ask_option 0 "Managing \"$vm\"..." '' required "${_manage_options[@]}"
+
+         case $ANSWER_OPTION in
+         "0")
+            return ;;
+         "2")
+            vm_manage_snapshots $vm ;;
+	 esac
 
          rm $TMPDIR/vm-manage*$$
       else
-         notify "There was an error processing your request.\nDetailed information can hopefully be found in the error log:\n $TMPDIR/vm-manage-err.$$"
+         alert_error "$TMPDIR/vm-manage-err.$$"
       fi
 
 
 
-
+   done
 }
-
-
-please_wait ()
+############
+# Manage snapshots for chosen vm 
+# $1 vm_name
+vm_manage_snapshots () \
 {
-   inform "Please wait while the request is processed.\nThis may take a moment...\n\n$1"
+   _vm_snapshots=("0" "Return to Previous Menu"\
+                  "1" "Take Snapshot"\
+                  "1" " "\
+                  "1" " "\
+                  "1" " "\
+                  "1" " "\
+   while true
+   do
+      ask_option 0 "Managing snapshots for \"$vm\"..." '' required "${_manage_snapshots[@]}"
+      case $ANSWER_OPTION in
+      "0")
+         return ;;
+      "1")
+         worker_take_snapshot $1
+
+   done
+
+
 }

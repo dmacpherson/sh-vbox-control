@@ -3,9 +3,12 @@
 # This file should contain all the functions which interact
 # with VBoxManage, and process it's output
 
+############
+# 
+
 gen_vm_list ()
 {
-   pointer=0
+   unset pointer
    if [ VBoxManage -q list vms >$TMPDIR/vm-list.$$ 2>$TMPDIR/vm-list-err.$$ ]
    then
       while read line
@@ -21,8 +24,9 @@ gen_vm_list ()
          VMLIST[pointer]=${state}
          ((pointer++))
       done < $TMPDIR/vmlistoutput.$$
+      rm $TMPDIR/vm-list*.$$
    else
-      alert_error $TMPDIR/vm-list-err
+      alert_error $TMPDIR/vm-list-err.$$
    fi
 }
 
@@ -31,7 +35,7 @@ gen_vm_list ()
 ### Query ostypes known to the version of virtualbox installed
 worker_query_vbox_ostypes ()
 {
-   pointer=0
+   unset pointer
 
    if [ VBoxManage list ostypes | grep ':' >$TMPDIR/vbox-ostypes.$$ 2>$TMPDIR/vbox-ostypes-err.$$ ]
    then
@@ -41,7 +45,7 @@ worker_query_vbox_ostypes ()
          type=`echo "$tmp" | sed 's/^ *//;s/ *$//'`
          OSTYPES[pointer]=${type}
          ((pointer++))
-      done < $TMPDIR/ostypes
+      done < $TMPDIR/vbox-ostypes
       ask_option 0 "Select an OS Type" '' required "0" "Other" "${OSTYPES[@]}"
    else
       notify_error "$TMPDIR/vbox-ostypes-err.$$"
@@ -67,7 +71,7 @@ worker_create_vm ()
 
 ############
 # Shows detailed info for selected VM
-# $1 (required) registered VM name
+# $1 (req) registered VM name
 worker_show_vm_info()
 {
    echo "#########################################" > $TMPDIR/vm-info.$$
@@ -83,3 +87,22 @@ worker_show_vm_info()
       alert_error "$TMPDIR/vm-info-err.$$"
    fi
 }
+
+
+############
+# Worker to take snapshot of VM
+# $1 (req) registered VM Name to take snapshot of
+# $2 (req) name for snapshot
+# $3 (opt) description for snapshot
+worker_take_snapshot ()
+{
+   unset opt_string
+   if [ -n $3 ]
+   then
+      opt_string=$("--description \"$3\"")
+   fi
+
+   VBoxManage snapshot $1 take $2 $optstring &>$TMPDIR/vm-snapshot.$$ | dialog --tailbox /tmp/ping.$$.log 20 50
+
+}
+
