@@ -206,7 +206,7 @@ show_registered ()
       # TODO ADD LOADING DIALOG
       ask_option 0 "Currently registered VMs" "\n\nPlease select one for more information..." required "0" "Return To Main Menu" "${VMLIST[@]}"
       if [ $ANSWER_OPTION ]; then return; fi
-      vm_manage_root $ANSWER_OPTION
+      vm_manage_root "$ANSWER_OPTION"
    done
 }
 
@@ -225,18 +225,12 @@ vm_manage_root ()
                     "6" " "\
                     "7" " "\
                     "8" " "\
-                    "9" " "\
-                    "10" " ")
+                    "9" " "\)
    vm=$1
    please_wait "Requesting detailed information on selected VM..."
-   if [ "$(`VBoxManage showvminfo "$vm" > $TMPDIR/vm-manage 2>$TMPDIR/vm-manage-err`)$?" >= "1" ]
-   then
-      alert_error "$TMPDIR/vm-manage"
-      return
-   fi
-   
-   vm_parse_master $TMPDIR/vm-manage.$$
+   VBoxManage showvminfo "$1" > $TMPDIR/vm-manage 2>$TMPDIR/vm-manage-err
       
+   vmparse_master "$TMPDIR/vm-manage"
    while true #Keep looping until they choose to return to main menu
    do 
       ask_option 0 "Managing \"$vm\"..." '' required "${_manage_options[@]}"
@@ -257,10 +251,10 @@ vm_manage_root ()
 vm_manage_snapshots () \
 {
    _manage_snapshots=("0" "Return to Previous Menu"\
-                  "1" "Take Snapshot"\
-                  "2" "Restore Snapshot"\
-                  "3" "Delete Snapshot "\
-                  "4" " "\
+                  "1" "List Snapshots"\
+                  "2" "Take Snapshot"\
+                  "3" "Restore Snapshot "\
+                  "4" "Delete Snapshot "\
                   "5" " ")
 
    while true
