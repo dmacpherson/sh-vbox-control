@@ -76,17 +76,18 @@ worker_create_vm ()
 # $1 (req) registered VM name
 worker_show_vm_info()
 {
-   echo "#########################################" > $TMPDIR/vm-info.$$
-   echo "# Detailed information for \""$1"\"" >> $TMPDIR/vm-info.$$
-   echo "# Please note this is NOT an editable configuration" >> $TMPDIR/vm-info.$$
-   echo "# Provided by: \`VBoxManage showvminfo \""$1"\"\`" >> $TMPDIR/vm-info.$$
-   echo "# Press 'Q' to Quit" >> $TMPDIR/vm-info.$$
-   echo -e "#########################################\n\n\n" >> $TMPDIR/vm-info.$$
-   if [ VBoxManage showvminfo "$1" >> $TMPDIR/vm-info.$$ 2> $TMPDIR/vm-info-err.$$ && cat $TMPDIR/vm-info.$$ | less ]
+   echo "#########################################" > $TMPDIR/vm-info
+   echo "# Detailed information for \""$1"\"" >> $TMPDIR/vm-info
+   echo "# Please note this is NOT an editable configuration" >> $TMPDIR/vm-info
+   echo "# Provided by: \`VBoxManage showvminfo \""$1"\"\`" >> $TMPDIR/vm-info
+   echo "# Press 'Q' to Quit" >> $TMPDIR/vm-info
+   echo -e "#########################################\n\n\n" >> $TMPDIR/vm-info
+   VBoxManage showvminfo "$1" >> $TMPDIR/vm-info 2> $TMPDIR/vm-info-err && cat $TMPDIR/vm-info.$$ | less
+   if [ $? ]
    then
-      rm $TMPDIR/vm-info*$$
+      rm $TMPDIR/vm-info*
    else
-      alert_error "$TMPDIR/vm-info-err.$$"
+      alert_error "$TMPDIR/vm-info-err"
    fi
 }
 
@@ -110,7 +111,7 @@ worker_take_snapshot ()
       opt_string=$("$opt_string --pause")
    fi
 
-   VBoxManage snapshot $1 take $2 $optstring &>$TMPDIR/vm-snapshot.$$ | dialog --tailbox /tmp/ping.$$.log 20 50
+   VBoxManage snapshot $1 take $2 $optstring &>$TMPDIR/vm-snapshot | dialog --tailbox $TMPDIR/vm-snapshot 0 0
 
 
 }
@@ -122,11 +123,12 @@ worker_take_snapshot ()
 # $2 (req) snapshot name to restore
 worker_snapshot_restore ()
 {
-   if [ "$(`VBoxManage snapshot $1 restore $2 >> $TMPDIR/vm-snapshot-restore.$$ 2> $TMPDIR/vm-snapshot-restore-err.$$`)$?" ]
+   VBoxManage snapshot $1 restore $2 >> $TMPDIR/vm-snapshot-restore.$$ 2> $TMPDIR/vm-snapshot-restore-err
+   if [ "$?" ]
    then
-      rm $TMPDIR/vm-snapshot-restore*$$
+      rm $TMPDIR/vm-snapshot-restore
    else
-      alert_error "$TMPDIR/vm-snapshot-restore-err.$$"
+      alert_error "$TMPDIR/vm-snapshot-restore-err"
    fi
 }
 

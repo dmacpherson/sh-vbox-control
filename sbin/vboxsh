@@ -35,7 +35,7 @@ load_lib lib-interactive.sh
 load_lib lib-misc.sh
 load_lib lib-vboxmanage.sh
 load_lib lib-alerts.sh
-
+load_lib lib-vminfo-parse.sh
 check_depend_dialog
 
 ###### perform actual logic ######
