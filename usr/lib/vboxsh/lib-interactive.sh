@@ -255,7 +255,7 @@ vm_manage_snapshots () \
       "0")
          return ;;
       "1")
-         worker_take_snapshot $1
+         worker_take_snapshot $1;;
 
    done
 
