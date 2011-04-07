@@ -10,7 +10,7 @@
 # $1 (req) output file to parse
 vmparse_master ()
 {
- vmparse_snapshot
+ vmparse_snapshot $1
 }
 
 

@@ -265,7 +265,7 @@ vm_manage_snapshots () \
    _manage_snapshots=("0" "Return to Previous Menu"\
                   "1" "Take Snapshot"\
                   "2" "Restore Snapshot"\
-                  "3" " "\
+                  "3" "Delete Snapshot "\
                   "4" " "\
                   "5" " ")
 
@@ -276,7 +276,7 @@ vm_manage_snapshots () \
       "0")
          return
          ;;
-      "1")
+      "1") # Take snapshot
          if [ ask_yesno "Do you want to pause \"$1\" before taking the snapshot?\nCurrent `cat $TMPDIR/vm-manage.$2 | grep -i "^State:" | sed 's/ */ /g'`" ]
          then 
             worker_take_snapshot $1 1
@@ -288,7 +288,7 @@ vm_manage_snapshots () \
             worker_take_snapshot $1
          fi
          ;;
-      "2")
+      "2") # Restore snapshot
          ask_option 0 "Select snapshot to restore." '' required "0" "Return to Previous Menu" "${VMSNAPSHOTS[@]}" 
          if [ $ANSWER_OPTION = "0" ]
          then
@@ -297,6 +297,7 @@ vm_manage_snapshots () \
             [ -n $ANSWER_OPTION ] && worker_snapshot_restore $1 $ANSWER_OPTION   
          fi
          ;;
+      "3")
       esac
    done
 
