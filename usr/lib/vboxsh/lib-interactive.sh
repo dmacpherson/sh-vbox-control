@@ -47,11 +47,8 @@ mainmenu()
    "4")
       gen_vm_list
       # TODO ADD LOADING DIALOG
-      ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" "${VMLIST[@]}"
-      if [ "$ANSWER_OPTION" ]
-      then
-         return
-      fi
+      ask_option 0 "Pick your VM to Start/Stop/Etc." '' required "0" "Return To Main Menu" "${VMLIST[@]}"
+	if [ $ANSWER_OPTION = 0 ]; then return; fi
       machine_name_temp=$ANSWER_OPTION
       start_stop_vm
       ;;
@@ -143,44 +140,42 @@ start_stop_vm ()
         rm -rf $TMPDIR/vboxcheckstate.tmp
 
         #Depending on the state of the machine - this case will give user different options
-        case $state in
-                "running")
-                        ask_yesno "This machine is $state"
-                        default=no
-                        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
-                        ask_option $default "MAIN MENU" '' required \
-                        "pause" "Pause machine as is" \
-                        "savestate" "Savestate is similar to hibernate" \
-                        "reset" "Reset the VM" \
-                        "poweroff" "power off the vm" \
-                        "acpipowerbutton" "Like pressing power button" \
-                        "acpisleepbutton" "Like pressing sleep button"
-                        ask_yesno "Are you sure you want to $ANSWER_OPTION $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp $ANSWER_OPTION
-                        ;;
-                "powered off")
-                        ##Call start function (Need to code)
-                        #### Use below section in a global accessible area to enable start on vm create
-                        ask_yesno "This machine is $state"
-                        default=no
-                        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
-                        ask_option $default "MAIN MENU" '' required \
-                        "1" "Start VM" \
-                        ask_string "Please Enter VNC Port #"
-                        vnc_port_num=${ANSWER_STRING}
-                        nohup /usr/local/bin/VBoxHeadless -s $machine_name_temp --vnc --vncport $ANSWER_STRING > /dev/null 2>&1 &
-                        ;;
-                "aborted")
-                        ##Call start function
-                        ask_yesno "This machine is $state"
-                        ;;
-                "savestate")
-                        ##Call start function
-                        ask_yesno "This machine is $state"
-                        ;;
-                "paused")
-                        ask_yesno "This machine is $state"
-                        ;;
-                *)
+#        case $state in
+            #    "running")
+            #            ask_yesno "This machine is $state"
+            #            default=no
+            #            [ -n "$NEXTITEM" ] && default="$NEXTITEM"
+            #            ask_option $default "MAIN MENU" '' required \
+            #            "pause" "Pause machine as is" \
+            #            "savestate" "Savestate is similar to hibernate" \
+            #            "reset" "Reset the VM" \
+            #            "poweroff" "power off the vm" \
+            #            "acpipowerbutton" "Like pressing power button" \
+            #            "acpisleepbutton" "Like pressing sleep button"
+            #            worker_startstop_vm $ANSWER_OPTION $machine_name_temp
+            #            ;;
+            #    "powered off")
+           #             ##Call start function (Need to code)
+           #             #### Use below section in a global accessible area to enable start on vm create
+          #              ask_yesno "This machine is $state"
+         #               default=no
+        #                [ -n "$NEXTITEM" ] && default="$NEXTITEM"
+       #                 ask_option $default "MAIN MENU" '' required \
+      #                  "1" "Start VM" \
+     #                   ask_string "Please Enter VNC Port #"
+    #                    vnc_port_num=${ANSWER_STRING}
+   #                     nohup /usr/local/bin/VBoxHeadless -s $machine_name_temp --vnc --vncport $ANSWER_STRING > /dev/null 2>&1 &
+  #                      ;;
+ #               "aborted")
+#			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
+  #                      ;;
+ #               "savestate")
+#			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
+  #                      ;;
+ #               "paused")
+#			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
+   #                     ;;
+  #              *)
                         ask_yesno "This machine is $state"
                         default=no
                         [ -n "$NEXTITEM" ] && default="$NEXTITEM"
@@ -193,9 +188,10 @@ start_stop_vm ()
                         "poweroff" "Power Off the vm" \
                         "acpipowerbutton" "Like pressing power button" \
                         "acpisleepbutton" "Like pressing sleep button"
-                        ask_yesno "Are you sure you want to $ANSWER_OPTION $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp $ANSWER_OPTION
-                        ;;
-        esac
+			ask_yesno "Are you sure you want to $ANSWER_OPTION $machine_name_temp ?"
+			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
+ #                       ;;
+#        esac
 }
 
 show_registered ()

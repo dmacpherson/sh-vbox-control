@@ -136,7 +136,8 @@ worker_snapshot_restore ()
 # Worker to issue start/stop commands to VM
 # $1 (req) signal to send to vm
 # $2 (req) VM to send signal to
-# $3 (opt) headless configuration string -n -m yourport -o yourpassword
+# $3 (opt) headless configuration string -n -m yourport
+# $4 (opt) headless configuration string -o yourpassword
 # TODO: Error handling
 worker_startstop_vm ()
 {
@@ -149,7 +150,7 @@ worker_startstop_vm ()
    then
       sleep 1
       #VBoxHeadless
-      nohup VBoxHeadless -s $2 $3 > /dev/null 2>&1 &
+      nohup VBoxHeadless -s $2 $3 $4 > /dev/null 2>&1 &
    fi
 }
 
