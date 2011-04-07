@@ -233,10 +233,11 @@ vm_manage_root ()
       gen_vm_list
       ask_option 0 "Please select a VM to manage..." '' required "0" "Return To Main Menu" "${VMLIST[@]}"
       if [ $ANSWER_OPTION ]; then return; fi
-      vm_name=${ANSWER_OPTION}
+      vm=${ANSWER_OPTION}
       please_wait "Requesting detailed information on selected VM..."
       if [ VBoxManage showvminfo "$vm" > $TMPDIR/vm-manage.$$ 2>$TMPDIR/vm-manage-err.$$ ]
       then
+         vm_parse_master $TMPDIR/vm-manage.$$
          ask_option 0 "Managing \"$vm\"..." '' required "${_manage_options[@]}"
 
          case $ANSWER_OPTION in
@@ -267,18 +268,19 @@ vm_manage_snapshots () \
                   "3" " "\
                   "4" " "\
                   "5" " ")
+
    while true
    do
-      ask_option 0 "Managing snapshots for \"$vm\"..." '' required "${_manage_snapshots[@]}"
+      ask_option 0 "Managing snapshots for \"$1\"..." '' required "${_manage_snapshots[@]}"
       case $ANSWER_OPTION in
       "0")
          return
          ;;
       "1")
-         if [ ask_yesno "Do you want to pause \"$vm\" before taking the snapshot?\nCurrent `cat $TMPDIR/vm-manage.$2 | grep -i "^State:" | sed 's/ */ /g'`" ]
+         if [ ask_yesno "Do you want to pause \"$1\" before taking the snapshot?\nCurrent `cat $TMPDIR/vm-manage.$2 | grep -i "^State:" | sed 's/ */ /g'`" ]
          then 
             worker_take_snapshot $1 1
-            if [ask_yesno "You chose to pause \"$vm\" to take the snapshot.\nDo you want to resume the machine now?" ]
+            if [ask_yesno "You chose to pause \"$1\" to take the snapshot.\n\nDo you want to resume the machine now?" ]
             then 
                worker_startstop_vm "resume" $1
             fi 
@@ -287,9 +289,14 @@ vm_manage_snapshots () \
          fi
          ;;
       "2")
-         unset VMSNAPSHOTS
-         parse_snapshots $TMPDIR/vm-manage.$$
-         worker_restore_snapshot $1;;
+         ask_option 0 "Select snapshot to restore." '' required "0" "Return to Previous Menu" "${VMSNAPSHOTS[@]}" 
+         if [ $ANSWER_OPTION = "0" ]
+         then
+            continue
+         else
+            [ -n $ANSWER_OPTION ] && worker_snapshot_restore $1 $ANSWER_OPTION   
+         fi
+         ;;
       esac
    done
 

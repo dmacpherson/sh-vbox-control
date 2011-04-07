@@ -113,6 +113,21 @@ worker_take_snapshot ()
 
 }
 
+
+#########
+# Worker to restore snapshot
+# $1 (req) VM Name
+# $2 (req) snapshot name to restore
+worker_snapshot_restore ()
+{
+   if [ VBoxManage snapshot $1 restore $2 >> $TMPDIR/vm-snapshot-restore.$$ 2> $TMPDIR/vm-snapshot-restore-err.$$ ]
+   then
+      rm $TMPDIR/vm-snapshot-restore*$$
+   else
+      alert_error "$TMPDIR/vm-snapshot-restore-err.$$"
+   fi
+}
+
 #########
 # Worker to issue start/stop commands to VM
 # $1 (req) signal to send to vm

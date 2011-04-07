@@ -11,13 +11,14 @@ please_wait ()
 
 
 ############
-# $1 (suggested) location of stderr output or more information
+# $1 (sug) location of stderr output or more information
+# $2 (opt) optional additional text
 alert_error ()
 {
    if [ -f $1 ] 
-      then $1="More information can be found in the file:\n$1" 
+      then notify "There was an error processing your request...\n$2\nMore information can be found at $1" 
    fi
-   inform "There was an error processing your request...\n\n$1"
+   notify "There was an error processing your request...\n$2"
 }
 
 
