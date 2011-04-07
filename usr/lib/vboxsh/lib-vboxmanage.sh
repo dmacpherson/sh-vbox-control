@@ -105,7 +105,7 @@ worker_take_snapshot ()
 
    if [ "$4" = "1" ]
    then
-      optstrin=$("$opt_string --pause")
+      opt_string=$("$opt_string --pause")
    fi
 
    VBoxManage snapshot $1 take $2 $optstring &>$TMPDIR/vm-snapshot.$$ | dialog --tailbox /tmp/ping.$$.log 20 50
@@ -113,3 +113,27 @@ worker_take_snapshot ()
 
 }
 
+#########
+# Worker to issue start/stop commands to VM
+# $1 (req) signal to send to vm
+# $2 (req) VM to send signal to
+# $3 (opt) headless configuration string
+# TODO: Error handling
+worker_startstop_vm ()
+{
+   if [[ "$1" = "pause" || "$1" = "resume" || "$1" = "reset" || "$1" = "poweroff" || "$1" = "savestate" ]]
+   then
+      VBoxManage controlvm $2 $1 
+   fi
+
+   if [[ "$1" = "start" ]]
+   then
+      #VBoxHeadless
+   fi
+}
+
+
+
+
+
+}#
