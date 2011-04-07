@@ -13,11 +13,9 @@ DISCLAIMER="Note that despite our not-so-careful coding and proper testing there
 UI="dia"
 DIACMD="cdialog"
 
-
 export LC_COLLATE=C # for consistent sorting behavior
 
 ###### DEBUGGING #######
-
 LOG_TO_FILE=0
 
 # $1 library name   
