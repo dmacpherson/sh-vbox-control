@@ -261,7 +261,7 @@ vm_manage_root ()
 # $2 PID for vm-manage info
 vm_manage_snapshots () \
 {
-   _vm_snapshots=("0" "Return to Previous Menu"\
+   _manage_snapshots=("0" "Return to Previous Menu"\
                   "1" "Take Snapshot"\
                   "2" "Restore Snapshot"\
                   "3" " "\
@@ -275,15 +275,20 @@ vm_manage_snapshots () \
          return
          ;;
       "1")
-         if [ ask_yesno "Do you want to pause the VM before taking the snapshot?\nCurrent `cat $TMPDIR/vm-manage.$2 | grep -i "^State:" | sed 's/ */ /g'`" ]
+         if [ ask_yesno "Do you want to pause \"$vm\" before taking the snapshot?\nCurrent `cat $TMPDIR/vm-manage.$2 | grep -i "^State:" | sed 's/ */ /g'`" ]
          then 
             worker_take_snapshot $1 1
+            if [ask_yesno "You chose to pause \"$vm\" to take the snapshot.\nDo you want to resume the machine now?" ]
+            then 
+               worker_startstop_vm "resume" $1
+            fi 
          else
             worker_take_snapshot $1
          fi
          ;;
       "2")
-         list_vm_snapshots
+         unset VMSNAPSHOTS
+         parse_snapshots $TMPDIR/vm-manage.$$
          worker_restore_snapshot $1;;
       esac
    done

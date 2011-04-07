@@ -126,8 +126,9 @@ worker_startstop_vm ()
       VBoxManage controlvm $2 $1 
    fi
 
-   if [[ "$1" = "start" ]]
+   if [ "$1" = "start" ]
    then
+      sleep 1
       #VBoxHeadless
    fi
 }
@@ -135,5 +136,3 @@ worker_startstop_vm ()
 
 
 
-
-}#
