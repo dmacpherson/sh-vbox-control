@@ -244,19 +244,23 @@ vm_manage_snapshots () \
 {
    _vm_snapshots=("0" "Return to Previous Menu"\
                   "1" "Take Snapshot"\
-                  "1" " "\
-                  "1" " "\
-                  "1" " "\
-                  "1" " "\
+                  "2" "Restore Snapshot"\
+                  "3" " "\
+                  "4" " "\
+                  "5" " ")
    while true
    do
       ask_option 0 "Managing snapshots for \"$vm\"..." '' required "${_manage_snapshots[@]}"
       case $ANSWER_OPTION in
       "0")
-         return ;;
+         return
+         ;;
       "1")
          worker_take_snapshot $1;;
-
+      "2")
+         list_vm_snapshots
+         worker_restore_snapshot $1;;
+      esac
    done
 
 

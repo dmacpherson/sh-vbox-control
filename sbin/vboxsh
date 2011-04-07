@@ -4,7 +4,7 @@
 ###### Set some default variables ######
 TITLE="Vbox Shell Control"
 LOG="/dev/tty7"
-LIB_USER="~/projects/sh-vbox-control/usr/lib/vboxsh"
+LIB_USER=~/projects/sh-vbox-control/usr/lib/vboxsh
 TMPDIR="/tmp/vboxsh"
 LOGDIR="/var/log/vboxsh"
 LOGFILE="$LOGDIR/vboxsh.log"
