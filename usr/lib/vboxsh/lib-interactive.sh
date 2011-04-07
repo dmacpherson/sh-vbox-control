@@ -133,51 +133,68 @@ create_vm_settings ()
 
 start_stop_vm ()
 {
-	vnc_port_num=""
-        default=no
-        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
-        ask_option $default "MAIN MENU" '' required \
-	"1" "Start VM" \
-        "2" "Pause" \
-        "3" "Resume" \
-        "4" "Reset" \
-        "5" "Power Off" \
-        "6" "Save State" \
-        "7" "ACPI Power Button" \
-        "8" "ACPI Sleep Button" \
+        vnc_port_num=""
 
-        case $ANSWER_OPTION in
-                "1")
-			### START VM HERE
-			### Need to create a function here to Start VM and ask for VNC port and password.
-			### Make sure we can then call this same function so after you create a vm you get an option to start it.
-			ask_string "Please Enter VNC Port #"
-			vnc_port_num=${ANSWER_STRING}
-			nohup /usr/local/bin/VBoxHeadless -s $machine_name_temp --vnc --vncport $ANSWER_STRING > /dev/null 2>&1 &
+        #Grab the machines current State
+        > $TMPDIR/vboxcheckstate.tmp
+        state=`VBoxManage showvminfo "$machine_name_temp" | grep State`
+        tmp=${state#*\:}
+        state=${tmp%\(*}
+        state=`echo "$state" | sed 's/^ *//;s/ *$//'`
+        rm -rf $TMPDIR/vboxcheckstate.tmp
+
+        #Depending on the state of the machine - this case will give user different options
+        case $state in
+                "running")
+                        ask_yesno "This machine is $state"
+                        default=no
+                        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
+                        ask_option $default "MAIN MENU" '' required \
+                        "pause" "Pause machine as is" \
+                        "savestate" "Savestate is similar to hibernate" \
+                        "reset" "Reset the VM" \
+                        "poweroff" "power off the vm" \
+                        "acpipowerbutton" "Like pressing power button" \
+                        "acpisleepbutton" "Like pressing sleep button"
+                        ask_yesno "Are you sure you want to $ANSWER_OPTION $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp $ANSWER_OPTION
                         ;;
-		"2")
-                        ask_yesno "Are you sure you want to Pause $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp pause
-			;;
-                "3")
-                        ask_yesno "Are you sure you want to Resume $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp resume
+                "powered off")
+                        ##Call start function (Need to code)
+                        #### Use below section in a global accessible area to enable start on vm create
+                        ask_yesno "This machine is $state"
+                        default=no
+                        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
+                        ask_option $default "MAIN MENU" '' required \
+                        "1" "Start VM" \
+                        ask_string "Please Enter VNC Port #"
+                        vnc_port_num=${ANSWER_STRING}
+                        nohup /usr/local/bin/VBoxHeadless -s $machine_name_temp --vnc --vncport $ANSWER_STRING > /dev/null 2>&1 &
                         ;;
-                "4")
-                        ask_yesno "Are you sure you want to Reset $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp reset
+                "aborted")
+                        ##Call start function
+                        ask_yesno "This machine is $state"
                         ;;
-                "5")
-                        ask_yesno "Are you sure you want to Power Off $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp poweroff
+                "savestate")
+                        ##Call start function
+                        ask_yesno "This machine is $state"
                         ;;
-                "6")
-                        ask_yesno "Are you sure you want to Save State $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp savestate
-                        ;;
-                "7")
-                        ask_yesno "Are you sure you want to ACPI Power Button $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp acpipowerbutton
-                        ;;
-                "8")
-                        ask_yesno "Are you sure you want to ACPI Sleep Button $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp acpisleepbutton
+                "paused")
+                        ask_yesno "This machine is $state"
                         ;;
                 *)
-                        ask_yesno "We shouldnt be here...answer_option $ANSWER_OPTION with machine_name_temp $machine_name_temp default $default"
+                        ask_yesno "This machine is $state"
+                        default=no
+                        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
+                        ask_option $default "MAIN MENU" '' required \
+                        "start" "Start the VM" \
+                        "pause" "Pause machine as is" \
+                        "resume" "Resume machine" \
+                        "savestate" "Savestate is similar to hibernate" \
+                        "reset" "Reset the VM" \
+                        "poweroff" "Power Off the vm" \
+                        "acpipowerbutton" "Like pressing power button" \
+                        "acpisleepbutton" "Like pressing sleep button"
+                        ask_yesno "Are you sure you want to $ANSWER_OPTION $machine_name_temp ?" && VBoxManage controlvm $machine_name_temp $ANSWER_OPTION
                         ;;
         esac
 }
