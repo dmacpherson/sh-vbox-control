@@ -8,8 +8,10 @@
 
 gen_vm_list ()
 {
+   unset VMLIST
    unset pointer
-   if [ VBoxManage -q list vms >$TMPDIR/vm-list.$$ 2>$TMPDIR/vm-list-err.$$ ]
+   pid=$$
+   if [ "$(VBoxManage -q list vms >$TMPDIR/vm-list.$pid 2>$TMPDIR/vm-list-err.$pid)$?" ]
    then
       while read line
       do
@@ -23,8 +25,8 @@ gen_vm_list ()
          ((pointer++))
          VMLIST[pointer]=${state}
          ((pointer++))
-      done < $TMPDIR/vmlistoutput.$$
-      rm $TMPDIR/vm-list*.$$
+      done < $TMPDIR/vm-list.$pid
+      rm $TMPDIR/vm-list*.$pid
    else
       alert_error $TMPDIR/vm-list-err.$$
    fi
@@ -37,7 +39,7 @@ worker_query_vbox_ostypes ()
 {
    unset pointer
 
-   if [ VBoxManage list ostypes | grep ':' >$TMPDIR/vbox-ostypes.$$ 2>$TMPDIR/vbox-ostypes-err.$$ ]
+   if [ "$(`VBoxManage list ostypes | grep ':' >$TMPDIR/vbox-ostypes.$$ 2>$TMPDIR/vbox-ostypes-err.$$`)$?" ]
    then
       while read line
       do
@@ -120,7 +122,7 @@ worker_take_snapshot ()
 # $2 (req) snapshot name to restore
 worker_snapshot_restore ()
 {
-   if [ VBoxManage snapshot $1 restore $2 >> $TMPDIR/vm-snapshot-restore.$$ 2> $TMPDIR/vm-snapshot-restore-err.$$ ]
+   if [ "$(`VBoxManage snapshot $1 restore $2 >> $TMPDIR/vm-snapshot-restore.$$ 2> $TMPDIR/vm-snapshot-restore-err.$$`)$?" ]
    then
       rm $TMPDIR/vm-snapshot-restore*$$
    else

@@ -23,56 +23,55 @@ start_interactive ()
 
 mainmenu()  
 {
-	default=no
-	[ -n "$NEXTITEM" ] && default="$NEXTITEM"
+   default=no
+   #
+   ask_option $default "MAIN MENU" '' required \
+   "1" "$title_vm_list" \
+   "2" "$title_vm_create" \
+   "3" "$title_vm_modify" \
+   "4" "$title_vm_startstop" \
+   "5" "$title_vm_delete" \
+   "6" "$title_vm_manage_iso" \
+   "7" "--------------------" \
+   "8" "$title_exit"
 
-	#
-	ask_option $default "MAIN MENU" '' required \
-	"1" "$title_vm_list" \
-	"2" "$title_vm_create" \
-	"3" "$title_vm_modify" \
-	"4" "$title_vm_startstop" \
-	"5" "$title_vm_delete" \
-	"6" "$title_vm_manage_iso" \
-	"7" "--------------------" \
-	"8" "$title_exit"
-	case $ANSWER_OPTION in
-	"1") ### show registered VMs
-		show_registered
-		;;
-        "2")
-		create_vm_settings
-		;;
-        "3")
-		;;
-        "4")
-                gen_vm_list
-                # TODO ADD LOADING DIALOG
-                ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" "${VMLIST[@]}"
-		if [ $ANSWER_OPTION = "0" ]
-			then
-				return
-		fi
-                machine_name_temp=$ANSWER_OPTION
-                start_stop_vm
-		;;
-        "5")
-		;;
-        "6") ###Manage ISO
-		;;
-        "7") ###-----------
-		;;
-        "8")	#TODO do any cleanups and wait for any open PID's that need monitoring.
-		exit_vboxsh ;;
-        *)
-		ask_yesno "Are you sure you want to exit?" && exit_vboxsh ;;
-    esac
+   case $ANSWER_OPTION in
+   "1") ### show registered VMs
+      show_registered
+      ;;
+   "2")
+      create_vm_settings
+      ;;
+   "3")
+      ;;
+   "4")
+      gen_vm_list
+      # TODO ADD LOADING DIALOG
+      ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" "${VMLIST[@]}"
+      if [ "$ANSWER_OPTION" ]
+      then
+         return
+      fi
+      machine_name_temp=$ANSWER_OPTION
+      start_stop_vm
+      ;;
+   "5")
+      ;;
+   "6") ###Manage ISO
+      ;;
+   "7") ###-----------
+      ;;
+   "8")	#TODO do any cleanups and wait for any open PID's that need monitoring.
+      exit_vboxsh ;;
+   *)
+     ask_yesno "Are you sure you want to exit?" && exit_vboxsh ;;
+   esac
 }
 
 
 worker_intro ()
 {
-	notify "$DISCLAIMER"
+   notify "$DISCLAIMER"
 }
 
 
@@ -205,14 +204,16 @@ show_registered ()
    do
       gen_vm_list
       # TODO ADD LOADING DIALOG
-      please_wait "Loading list of registered VMs..."
-      sleep 10
       ask_option 0 "Currently registered VMs" "\n\nPlease select one for more information..." required "0" "Return To Main Menu" "${VMLIST[@]}"
       if [ $ANSWER_OPTION ]; then return; fi
-      worker_show_vm_info $ANSWER_OPTION
+      vm_manage_root $ANSWER_OPTION
    done
 }
 
+
+############
+# manage selected vm
+# $1 VM name
 vm_manage_root ()
 {
    _manage_options=("0" "Return to Main Menu"\
@@ -226,36 +227,29 @@ vm_manage_root ()
                     "8" " "\
                     "9" " "\
                     "10" " ")
-
+   vm=$1
+   please_wait "Requesting detailed information on selected VM..."
+   if [ "$(`VBoxManage showvminfo "$vm" > $TMPDIR/vm-manage 2>$TMPDIR/vm-manage-err`)$?" >= "1" ]
+   then
+      alert_error "$TMPDIR/vm-manage"
+      return
+   fi
+   
+   vm_parse_master $TMPDIR/vm-manage.$$
+      
    while true #Keep looping until they choose to return to main menu
    do 
-      please_wait "Loading list of registered VM's..."
-      gen_vm_list
-      ask_option 0 "Please select a VM to manage..." '' required "0" "Return To Main Menu" "${VMLIST[@]}"
-      if [ $ANSWER_OPTION ]; then return; fi
-      vm=${ANSWER_OPTION}
-      please_wait "Requesting detailed information on selected VM..."
-      if [ VBoxManage showvminfo "$vm" > $TMPDIR/vm-manage.$$ 2>$TMPDIR/vm-manage-err.$$ ]
-      then
-         vm_parse_master $TMPDIR/vm-manage.$$
-         ask_option 0 "Managing \"$vm\"..." '' required "${_manage_options[@]}"
-
-         case $ANSWER_OPTION in
-         "0")
-            return ;;
-         "2")
-            vm_manage_snapshots $vm $$ ;;
-	 esac
-
-         rm $TMPDIR/vm-manage*$$
-      else
-         alert_error "$TMPDIR/vm-manage-err.$$"
-      fi
-
-
-
+      ask_option 0 "Managing \"$vm\"..." '' required "${_manage_options[@]}"
+      case $ANSWER_OPTION in
+      "0")
+         return ;;
+      "2")
+         vm_manage_snapshots $vm $$ ;;
+      esac
    done
 }
+
+
 ############
 # Manage snapshots for chosen vm 
 # $1 vm_name
