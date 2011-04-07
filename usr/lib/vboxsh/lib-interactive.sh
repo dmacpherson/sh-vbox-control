@@ -189,7 +189,8 @@ show_registered ()
       gen_vm_list
       # TODO ADD LOADING DIALOG
       please_wait "Loading list of registered VMs..."
-      ask_option 0 "This list shows currently registered VMs.\nPlease select one for more information..." '' required "0" "Return To Main Menu" "${VMLIST[@]}"
+      sleep 10
+      ask_option 0 "Currently registered VMs" "\n\nPlease select one for more information..." required "0" "Return To Main Menu" "${VMLIST[@]}"
       if [ $ANSWER_OPTION ]; then return; fi
       worker_show_vm_info $ANSWER_OPTION
    done
@@ -225,7 +226,7 @@ vm_manage_root ()
          "0")
             return ;;
          "2")
-            vm_manage_snapshots $vm ;;
+            vm_manage_snapshots $vm $$ ;;
 	 esac
 
          rm $TMPDIR/vm-manage*$$
@@ -240,6 +241,7 @@ vm_manage_root ()
 ############
 # Manage snapshots for chosen vm 
 # $1 vm_name
+# $2 PID for vm-manage info
 vm_manage_snapshots () \
 {
    _vm_snapshots=("0" "Return to Previous Menu"\
@@ -256,7 +258,13 @@ vm_manage_snapshots () \
          return
          ;;
       "1")
-         worker_take_snapshot $1;;
+         if [ ask_yesno "Do you want to pause the VM before taking the snapshot?\nCurrent `cat $TMPDIR/vm-manage.$2 | grep -i "^State:" | sed 's/ */ /g'`" ]
+         then 
+            worker_take_snapshot $1 1
+         else
+            worker_take_snapshot $1
+         fi
+         ;;
       "2")
          list_vm_snapshots
          worker_restore_snapshot $1;;

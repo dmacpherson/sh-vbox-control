@@ -94,6 +94,7 @@ worker_show_vm_info()
 # $1 (req) registered VM Name to take snapshot of
 # $2 (req) name for snapshot
 # $3 (opt) description for snapshot
+# TODO: use dialog var
 worker_take_snapshot ()
 {
    unset opt_string
@@ -102,7 +103,13 @@ worker_take_snapshot ()
       opt_string=$("--description \"$3\"")
    fi
 
+   if [ "$4" = "1" ]
+   then
+      optstrin=$("$opt_string --pause")
+   fi
+
    VBoxManage snapshot $1 take $2 $optstring &>$TMPDIR/vm-snapshot.$$ | dialog --tailbox /tmp/ping.$$.log 20 50
+
 
 }
 

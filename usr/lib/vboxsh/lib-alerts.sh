@@ -4,9 +4,9 @@
 
 ############
 # $1 (optional) extra information
-alert_wait ()
+please_wait ()
 {
-   inform "Please wait while the request is processed.\nThis may take a moment...\n\n$1"
+   inform "\nPlease wait while the request is processed.\nThis may take a moment...\n\n$1"
 }
 
 
