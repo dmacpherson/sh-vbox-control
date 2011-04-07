@@ -392,7 +392,7 @@ _${LIBUI_UI}_follow_progress "$@"
 # returns: whatever dialog did
 _dia_dialog()
 {
-	${DIACMD} --backtitle "$TITLE" --aspect 15 "$@" 3>&1 1>&2 2>&3 3>&-
+	${DIACMD} --backtitle "$TITLE" --aspect 15 --cr-wrap "$@" 3>&1 1>&2 2>&3 3>&-
 }
 
 

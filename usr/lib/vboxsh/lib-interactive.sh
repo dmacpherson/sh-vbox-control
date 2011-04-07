@@ -1,7 +1,7 @@
 #!/bin/bash
 EDITOR=nano
 
-title_vm_list='List Virtual Machines'
+title_vm_list='Show Registered VMs'
 title_vm_create='Create Virtual Machine'
 title_vm_modify='Modify Virtual Machine'
 title_vm_startstop='Start/Stop Virtual Machine'
@@ -34,20 +34,11 @@ mainmenu()
 	"4" "$title_vm_startstop" \
 	"5" "$title_vm_delete" \
 	"6" "$title_vm_manage_iso" \
-	"7" "TEST FILE BROWSER" \
+	"7" "--------------------" \
 	"8" "$title_exit"
 	case $ANSWER_OPTION in
-	"1")
-		gen_vm_list
-		# TODO ADD LOADING DIALOG
-		ask_option 0 "VM's Present" '' required "0" "Return To Main Menu" "${VMLIST[@]}"
-		echo "#########################################" > $TMPDIR/vminfo
-                echo "# VM Info for machine \""$ANSWER_OPTION"\"" >> $TMPDIR/vminfo
-                echo "# NOTE: This is not an editable configuration" >> $TMPDIR/vminfo
-                echo "# Provided by: VBoxManage showvminfo \""${ANSWER_OPTION}"\"" >> $TMPDIR/vminfo
-                echo "# Press 'Q' to Quit" >> $TMPDIR/vminfo
-                echo "#########################################" >> $TMPDIR/vminfo
-                VBoxManage showvminfo "${ANSWER_OPTION}" >> $TMPDIR/vminfo && cat $TMPDIR/vminfo | less
+	"1") ### show registered VMs
+		show_registered
 		;;
         "2")
 		create_vm_settings
@@ -67,10 +58,10 @@ mainmenu()
 		;;
         "5")
 		;;
-        "6")
+        "6") ###Manage ISO
 		;;
-        "7")
-		file_selector;;
+        "7") ###-----------
+		;;
         "8")	#TODO do any cleanups and wait for any open PID's that need monitoring.
 		exit_vboxsh ;;
         *)
@@ -105,7 +96,7 @@ create_vm_settings ()
 
    while [ -z "$cvm_ostype" ]
    do
-      queuery_vbox_ostypes
+      worker_query_vbox_ostypes
       cvm_ostype=${ANSWER_OPTION}
    done
 
@@ -191,3 +182,45 @@ start_stop_vm ()
         esac
 }
 
+show_registered ()
+{
+   while true
+   do
+      gen_vm_list
+      # TODO ADD LOADING DIALOG
+      please_wait "Loading registered VMs..."
+      ask_option 0 "This list shows currently registered VMs.\nPlease select one for more information..." '' required "0" "Return To Main Menu" "${VMLIST[@]}"
+      if [ $ANSWER_OPTION ]; then return; fi
+      worker_show_vm_info $ANSWER_OPTION
+   done
+}
+
+vm_manage_root ()
+{
+   while true #Keep looping until they choose to return to main menu
+   do 
+      please_wait "Loading registered VM's..."
+      gen_vm_list
+      ask_option 0 "Please select a VM to manage..." '' required "0" "Return To Main Menu" "${VMLIST[@]}"
+      if [ $ANSWER_OPTION ]; then return; fi
+      vm=${ANSWER_OPTION}
+      please_wait "Requesting detailed information on selected VM..."
+      if [ VBoxManage showvminfo "$ANSWER_OPTION" > $TMPDIR/vm=manage.$$ 2>$TMPDIR/vm-manage-err.$$ ]
+      then
+         
+
+         rm $TMPDIR/vm-manage*$$
+      else
+         notify "There was an error processing your request.\nDetailed information can hopefully be found in the error log:\n $TMPDIR/vm-manage-err.$$"
+      fi
+
+
+
+
+}
+
+
+please_wait ()
+{
+   inform "Please wait while the request is processed.\nThis may take a moment...\n\n$1"
+}

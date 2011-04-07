@@ -39,6 +39,7 @@ load_lib lib-flowcontrol.sh
 load_lib lib-interactive.sh
 load_lib lib-misc.sh
 load_lib lib-vboxmanage.sh
+load_lib lib-alerts.sh
 
 check_depend_dialog
 
