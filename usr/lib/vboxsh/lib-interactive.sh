@@ -129,13 +129,15 @@ create_vm_settings ()
 
 start_stop_vm ()
 {
+        local state=""
+	local tmp=""
+	local default=""
+
         #Grab the machines current State
-        touch $TMPDIR/vboxcheckstate.tmp
         state=`VBoxManage showvminfo "$machine_name_temp" | grep State`
         tmp=${state#*\:}
         state=${tmp%\(*}
         state=`echo "$state" | sed 's/^ *//;s/ *$//'`
-        rm $TMPDIR/vboxcheckstate.tmp
 
         #Depending on the state of the machine - this case will give user different options
         case $state in
