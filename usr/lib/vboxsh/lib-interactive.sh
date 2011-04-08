@@ -129,58 +129,51 @@ create_vm_settings ()
 
 start_stop_vm ()
 {
-        vnc_port_num=""
-
         #Grab the machines current State
-        > $TMPDIR/vboxcheckstate.tmp
+        touch $TMPDIR/vboxcheckstate.tmp
         state=`VBoxManage showvminfo "$machine_name_temp" | grep State`
         tmp=${state#*\:}
         state=${tmp%\(*}
         state=`echo "$state" | sed 's/^ *//;s/ *$//'`
-        rm -rf $TMPDIR/vboxcheckstate.tmp
+        rm $TMPDIR/vboxcheckstate.tmp
 
         #Depending on the state of the machine - this case will give user different options
-#        case $state in
-            #    "running")
-            #            ask_yesno "This machine is $state"
-            #            default=no
-            #            [ -n "$NEXTITEM" ] && default="$NEXTITEM"
-            #            ask_option $default "MAIN MENU" '' required \
-            #            "pause" "Pause machine as is" \
-            #            "savestate" "Savestate is similar to hibernate" \
-            #            "reset" "Reset the VM" \
-            #            "poweroff" "power off the vm" \
-            #            "acpipowerbutton" "Like pressing power button" \
-            #            "acpisleepbutton" "Like pressing sleep button"
-            #            worker_startstop_vm $ANSWER_OPTION $machine_name_temp
-            #            ;;
-            #    "powered off")
-           #             ##Call start function (Need to code)
-           #             #### Use below section in a global accessible area to enable start on vm create
-          #              ask_yesno "This machine is $state"
-         #               default=no
-        #                [ -n "$NEXTITEM" ] && default="$NEXTITEM"
-       #                 ask_option $default "MAIN MENU" '' required \
-      #                  "1" "Start VM" \
-     #                   ask_string "Please Enter VNC Port #"
-    #                    vnc_port_num=${ANSWER_STRING}
-   #                     nohup /usr/local/bin/VBoxHeadless -s $machine_name_temp --vnc --vncport $ANSWER_STRING > /dev/null 2>&1 &
-  #                      ;;
- #               "aborted")
-#			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
-  #                      ;;
- #               "savestate")
-#			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
-  #                      ;;
- #               "paused")
-#			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
-   #                     ;;
-  #              *)
+        case $state in
+                "running")
                         ask_yesno "This machine is $state"
                         default=no
                         [ -n "$NEXTITEM" ] && default="$NEXTITEM"
                         ask_option $default "MAIN MENU" '' required \
-                        "start" "Start the VM" \
+                        "pause" "Pause machine as is" \
+                        "savestate" "Savestate is similar to hibernate" \
+                        "reset" "Reset the VM" \
+                        "poweroff" "power off the vm" \
+                        "acpipowerbutton" "Like pressing power button" \
+                        "acpisleepbutton" "Like pressing sleep button"
+                        worker_startstop_vm $ANSWER_OPTION $machine_name_temp
+                        ;;
+                "powered off")
+                        ask_yesno "This machine is $state"
+                        default=no
+                        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
+                        ask_option $default "MAIN MENU" '' required \
+                        "1" "Start VM" \
+                        ;;
+                "aborted")
+			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
+                        ;;
+                "savestate")
+			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
+                        ;;
+                "paused")
+			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
+                        ;;
+                *)
+                        ask_yesno "This machine is $state"
+                        default=no
+                        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
+                        ask_option $default "MAIN MENU" '' required \
+                        "start" "\n\n\n\n\nStart the VM" \
                         "pause" "Pause machine as is" \
                         "resume" "Resume machine" \
                         "savestate" "Savestate is similar to hibernate" \
@@ -190,8 +183,8 @@ start_stop_vm ()
                         "acpisleepbutton" "Like pressing sleep button"
 			ask_yesno "Are you sure you want to $ANSWER_OPTION $machine_name_temp ?"
 			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
- #                       ;;
-#        esac
+                        ;;
+        esac
 }
 
 show_registered ()
