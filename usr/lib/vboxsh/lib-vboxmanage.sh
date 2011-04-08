@@ -136,23 +136,27 @@ worker_snapshot_restore ()
 # Worker to issue start/stop commands to VM
 # $1 (req) signal to send to vm
 # $2 (req) VM to send signal to
-# $3 (opt) headless configuration string -n -m yourport -o yourpassword
 # TODO: Error handling
 worker_startstop_vm ()
 {
-   if [[ "$1" = "pause" || "$1" = "resume" || "$1" = "reset" || "$1" = "poweroff" || "$1" = "savestate" ]]
-   then
-      VBoxManage controlvm $2 $1 
-   fi
-
-   if [ "$1" = "start" ]
-   then
-      sleep 1
-      #VBoxHeadless
-      nohup VBoxHeadless -s $2 $3 > /dev/null 2>&1 &
-   fi
+	if [[ "$1" = "pause" || "$1" = "resume" || "$1" = "reset" || "$1" = "poweroff" || "$1" = "savestate" ]]
+		then
+			VBoxManage controlvm $2 $1 
+	fi
+	if [ "$1" = "start" ]
+		then
+			vnc_port_num=""
+			vnc_password=""
+			ask_string "Please Enter VNC Port # (Leave Blank for None):"
+			if [[ "$ANSWER_STRING" != "" ]]
+				then
+					vnc_port_num="-n -m ${ANSWER_STRING}"
+                                        ask_string "Please Enter Password for VNC Access (Leave Blank for None):"
+					if [[ "$ANSWER_STRING" != "" ]]
+                                                then
+                                                        vnc_password="-o ${ANSWER_STRING}"
+                                        fi
+			fi
+		nohup VBoxHeadless -s $2 $vnc_port_num $vnc_password > /dev/null 2>&1 &
+	fi
 }
-
-
-
-
