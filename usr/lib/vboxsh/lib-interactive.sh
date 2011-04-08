@@ -131,7 +131,6 @@ start_stop_vm ()
 {
         local state=""
 	local tmp=""
-	local default=""
 
         #Grab the machines current State
         state=`VBoxManage showvminfo "$machine_name_temp" | grep State`
@@ -153,53 +152,21 @@ start_stop_vm ()
                         "acpisleepbutton" "Like pressing sleep button"
                         worker_startstop_vm $ANSWER_OPTION $machine_name_temp
                         ;;
-                "powered off")
-                        default=no
-                        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
-                        ask_option $default "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
-                        "start" "Start the VM" \
-                        worker_startstop_vm $ANSWER_OPTION $machine_name_temp
-                        ;;
-                "aborted")
-                        default=no
-                        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
-                        ask_option $default "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
-                        "start" "Start the VM" \
-                        worker_startstop_vm $ANSWER_OPTION $machine_name_temp
-                        ;;
-                "saved")
-                        default=no
-                        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
-                        ask_option $default "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
-                        "start" "Start the VM" \
-                        worker_startstop_vm $ANSWER_OPTION $machine_name_temp
-                        ;;
                 "paused")
                         default=no
                         [ -n "$NEXTITEM" ] && default="$NEXTITEM"
                         ask_option $default "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
-                        "start" "Start the VM" \
                         "resume" "Resume machine" \
-                        "savestate" "Savestate is similar to hibernate" \
-                        "reset" "Reset the VM" \
-                        "poweroff" "Power Off the vm" \
-                        "acpipowerbutton" "Like pressing power button" \
-                        "acpisleepbutton" "Like pressing sleep button"
+                        "poweroff" "Power Off the vm"
                         worker_startstop_vm $ANSWER_OPTION $machine_name_temp
                         ;;
                 *)
-                        default=no
+			#This should catch any VM's that are Powered Off, Saved, Aborted - Their only options are to Start
+			default=no
                         [ -n "$NEXTITEM" ] && default="$NEXTITEM"
                         ask_option $default "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
-                        "start" "Start the VM" \
-                        "pause" "Pause machine as is" \
-                        "resume" "Resume machine" \
-                        "savestate" "Savestate is similar to hibernate" \
-                        "reset" "Reset the VM" \
-                        "poweroff" "Power Off the vm" \
-                        "acpipowerbutton" "Like pressing power button" \
-                        "acpisleepbutton" "Like pressing sleep button"
-			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
+                        "start" "Start the VM"
+                        worker_startstop_vm $ANSWER_OPTION $machine_name_temp
                         ;;
         esac
 }
