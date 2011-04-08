@@ -141,9 +141,7 @@ start_stop_vm ()
         #Depending on the state of the machine - this case will give user different options
         case $state in
                 "running")
-                        default=no
-                        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
-                        ask_option $default "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
+                        ask_option "no" "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
                         "pause" "Pause machine as is" \
                         "savestate" "Savestate is similar to hibernate" \
                         "reset" "Reset the VM" \
@@ -153,18 +151,14 @@ start_stop_vm ()
                         worker_startstop_vm $ANSWER_OPTION $machine_name_temp
                         ;;
                 "paused")
-                        default=no
-                        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
-                        ask_option $default "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
+                        ask_option "no" "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
                         "resume" "Resume machine" \
                         "poweroff" "Power Off the vm"
                         worker_startstop_vm $ANSWER_OPTION $machine_name_temp
                         ;;
                 *)
 			#This should catch any VM's that are Powered Off, Saved, Aborted - Their only options are to Start
-			default=no
-                        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
-                        ask_option $default "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
+                        ask_option "no" "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
                         "start" "Start the VM"
                         worker_startstop_vm $ANSWER_OPTION $machine_name_temp
                         ;;
