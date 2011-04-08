@@ -143,20 +143,17 @@ worker_startstop_vm ()
 		then
 			VBoxManage controlvm $2 $1 
 	fi
-	if [ "$1" = "start" ]
-		then
-			vnc_port_num=""
-			vnc_password=""
-			ask_string "Please Enter VNC Port # (Leave Blank for None):"
-			if [[ "$ANSWER_STRING" != "" ]]
-				then
-					vnc_port_num="-n -m ${ANSWER_STRING}"
-                                        ask_string "Please Enter Password for VNC Access (Leave Blank for None):"
-					if [[ "$ANSWER_STRING" != "" ]]
-                                                then
-                                                        vnc_password="-o ${ANSWER_STRING}"
-                                        fi
+	if [ "$1" = "start" ] ; then
+		local vnc_port_num=""
+		local vnc_password=""
+		ask_string "Please Enter VNC Port # (Leave Blank for None):"
+		if [[ "$ANSWER_STRING" != "" ]] ; then
+			vnc_port_num="-n -m ${ANSWER_STRING}"
+			ask_string "Please Enter Password for VNC Access (Leave Blank for None):"
+			if [[ "$ANSWER_STRING" != "" ]] ; then
+				vnc_password="-o ${ANSWER_STRING}"
 			fi
+		fi
 		nohup VBoxHeadless -s $2 $vnc_port_num $vnc_password > /dev/null 2>&1 &
 	fi
 }
