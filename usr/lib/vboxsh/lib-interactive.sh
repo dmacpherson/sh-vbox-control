@@ -152,20 +152,20 @@ start_stop_vm ()
                         "acpisleepbutton" "Like pressing sleep button"
                         worker_startstop_vm $ANSWER_OPTION $machine_name_temp
                         ;;
-                "powered off")
+                "powered off-TEST")
                         ask_yesno "This machine is $state"
                         default=no
                         [ -n "$NEXTITEM" ] && default="$NEXTITEM"
                         ask_option $default "MAIN MENU" '' required \
                         "1" "Start VM" \
                         ;;
-                "aborted")
+                "aborted-TEST")
 			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
                         ;;
-                "savestate")
+                "saved-TEST")
 			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
                         ;;
-                "paused")
+                "paused-TEST")
 			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
                         ;;
                 *)
@@ -173,7 +173,7 @@ start_stop_vm ()
                         default=no
                         [ -n "$NEXTITEM" ] && default="$NEXTITEM"
                         ask_option $default "MAIN MENU" '' required \
-                        "start" "\n\n\n\n\nStart the VM" \
+                        "start" "Start the VM" \
                         "pause" "Pause machine as is" \
                         "resume" "Resume machine" \
                         "savestate" "Savestate is similar to hibernate" \
