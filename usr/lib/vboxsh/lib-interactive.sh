@@ -210,34 +210,44 @@ show_registered ()
 ############
 # manage selected vm
 # $1 VM name
-vm_manage_root ()
-{
-   _manage_options=("0" "Return to Main Menu"\
-                    "1" " "\
-                    "2" "Snapshots"\
-                    "3" " "\
-                    "4" " "\
-                    "5" " "\
-                    "6" " "\
-                    "7" " "\
-                    "8" " "\
-                    "9" " "\)
-   vm=$1
-   please_wait "Requesting detailed information on selected VM..."
-   VBoxManage showvminfo "$1" > $TMPDIR/vm-manage 2>$TMPDIR/vm-manage-err
-      
-   vmparse_master "$TMPDIR/vm-manage"
-   while true #Keep looping until they choose to return to main menu
-   do 
-      ask_option 0 "Managing \"$vm\"..." '' required "${_manage_options[@]}"
-      case $ANSWER_OPTION in
-      "0")
-         return ;;
-      "2")
-         vm_manage_snapshots $vm $$ ;;
-      esac
-   done
-}
+
+
+#######################################
+###### STARTED COMMENT OUT HERE....
+#######################################
+
+#vm_manage_root ()
+#{
+#   _manage_options=("0" "Return to Main Menu"\
+#                    "1" " "\
+#                    "2" "Snapshots"\
+#                    "3" " "\
+#                    "4" " "\
+#                    "5" " "\
+#                    "6" " "\
+#                    "7" " "\
+#                    "8" " "\
+#                    "9" " "\)
+#   vm=$1
+#   please_wait "Requesting detailed information on selected VM..."
+#   VBoxManage showvminfo "$1" > $TMPDIR/vm-manage 2>$TMPDIR/vm-manage-err
+#   vmparse_master "$TMPDIR/vm-manage"
+#   while true #Keep looping until they choose to return to main menu
+#   do 
+#      ask_option 0 "Managing \"$vm\"..." '' required "${_manage_options[@]}"
+#      case $ANSWER_OPTION in
+#      "0")
+#         return ;;
+#      "2")
+#         vm_manage_snapshots $vm $$ ;;
+#      esac
+#   done
+#}
+
+#######################################
+###### STOPPED COMMENT OUT HERE....
+#######################################
+
 
 
 ############
