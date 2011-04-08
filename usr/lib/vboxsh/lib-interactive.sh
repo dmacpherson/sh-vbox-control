@@ -142,39 +142,55 @@ start_stop_vm ()
         #Depending on the state of the machine - this case will give user different options
         case $state in
                 "running")
-                        ask_yesno "This machine is $state"
                         default=no
                         [ -n "$NEXTITEM" ] && default="$NEXTITEM"
-                        ask_option $default "MAIN MENU" '' required \
+                        ask_option $default "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
                         "pause" "Pause machine as is" \
                         "savestate" "Savestate is similar to hibernate" \
                         "reset" "Reset the VM" \
-                        "poweroff" "power off the vm" \
+                        "poweroff" "Power Off the vm" \
                         "acpipowerbutton" "Like pressing power button" \
                         "acpisleepbutton" "Like pressing sleep button"
                         worker_startstop_vm $ANSWER_OPTION $machine_name_temp
                         ;;
-                "powered off-TEST")
-                        ask_yesno "This machine is $state"
+                "powered off")
                         default=no
                         [ -n "$NEXTITEM" ] && default="$NEXTITEM"
-                        ask_option $default "MAIN MENU" '' required \
-                        "1" "Start VM" \
+                        ask_option $default "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
+                        "start" "Start the VM" \
+                        worker_startstop_vm $ANSWER_OPTION $machine_name_temp
                         ;;
-                "aborted-TEST")
-			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
+                "aborted")
+                        default=no
+                        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
+                        ask_option $default "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
+                        "start" "Start the VM" \
+                        worker_startstop_vm $ANSWER_OPTION $machine_name_temp
                         ;;
-                "saved-TEST")
-			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
+                "saved")
+                        default=no
+                        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
+                        ask_option $default "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
+                        "start" "Start the VM" \
+                        worker_startstop_vm $ANSWER_OPTION $machine_name_temp
                         ;;
-                "paused-TEST")
-			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
+                "paused")
+                        default=no
+                        [ -n "$NEXTITEM" ] && default="$NEXTITEM"
+                        ask_option $default "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
+                        "start" "Start the VM" \
+                        "resume" "Resume machine" \
+                        "savestate" "Savestate is similar to hibernate" \
+                        "reset" "Reset the VM" \
+                        "poweroff" "Power Off the vm" \
+                        "acpipowerbutton" "Like pressing power button" \
+                        "acpisleepbutton" "Like pressing sleep button"
+                        worker_startstop_vm $ANSWER_OPTION $machine_name_temp
                         ;;
                 *)
-                        ask_yesno "This machine is $state"
                         default=no
                         [ -n "$NEXTITEM" ] && default="$NEXTITEM"
-                        ask_option $default "MAIN MENU" '' required \
+                        ask_option $default "\"$machine_name_temp\" is currently \"$state\" Choose one of the below options:" '' required \
                         "start" "Start the VM" \
                         "pause" "Pause machine as is" \
                         "resume" "Resume machine" \
@@ -183,7 +199,6 @@ start_stop_vm ()
                         "poweroff" "Power Off the vm" \
                         "acpipowerbutton" "Like pressing power button" \
                         "acpisleepbutton" "Like pressing sleep button"
-			ask_yesno "Are you sure you want to $ANSWER_OPTION $machine_name_temp ?"
 			worker_startstop_vm $ANSWER_OPTION $machine_name_temp
                         ;;
         esac
