@@ -137,6 +137,7 @@ worker_snapshot_restore ()
 # $1 (req) signal to send to vm
 # $2 (req) VM to send signal to
 # TODO: Error handling
+# TODO: Check VNC number - maybe use a loop with return from the ask_number func.  doesnt work right if user doesnt put a number in. also 0 doesnt work as expected.
 worker_startstop_vm ()
 {
 	if [[ "$1" = "pause" || "$1" = "resume" || "$1" = "reset" || "$1" = "poweroff" || "$1" = "savestate" || "$1" = "acpipowerbutton" || "$1" = "acpisleepbutton" ]]
@@ -146,9 +147,9 @@ worker_startstop_vm ()
 	if [ "$1" = "start" ] ; then
 		local vnc_port_num=""
 		local vnc_password=""
-		ask_string "Please Enter VNC Port # (Leave Blank for None):"
-		if [[ "$ANSWER_STRING" != "" ]] ; then
-			vnc_port_num="-n -m ${ANSWER_STRING}"
+		ask_number "Please Enter VNC Port Number\n( Default 0 for No VNC Access )\n" 5900 6000 0
+		if [[ $ANSWER_NUMBER != "0" ]] ; then
+			vnc_port_num="-n -m ${ANSWER_NUMBER}"
 			ask_string "Please Enter Password for VNC Access (Leave Blank for None):"
 			if [[ "$ANSWER_STRING" != "" ]] ; then
 				vnc_password="-o ${ANSWER_STRING}"
