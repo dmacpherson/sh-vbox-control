@@ -141,7 +141,7 @@ worker_startstop_vm ()
 {
 	if [[ "$1" = "pause" || "$1" = "resume" || "$1" = "reset" || "$1" = "poweroff" || "$1" = "savestate" || "$1" = "acpipowerbutton" || "$1" = "acpisleepbutton" ]]
 		then
-			VBoxManage controlvm $2 $1 
+			VBoxManage controlvm $2 $1 > /dev/null 2>&1 &
 	fi
 	if [ "$1" = "start" ] ; then
 		local vnc_port_num=""
@@ -154,6 +154,6 @@ worker_startstop_vm ()
 				vnc_password="-o ${ANSWER_STRING}"
 			fi
 		fi
-		nohup VBoxHeadless -s $2 $vnc_port_num $vnc_password > /dev/null 2>&1 &
+		VBoxHeadless -s $2 $vnc_port_num $vnc_password > /dev/null 2>&1 &
 	fi
 }
