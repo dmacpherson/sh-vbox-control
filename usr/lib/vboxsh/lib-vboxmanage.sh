@@ -38,6 +38,7 @@ gen_vm_list ()
 ########
 ###This Gets the VNC Port number of Running machines to show in list.
 ###TODO:  Test in Linux - Only works with port numbers 4 digits long.
+###Will Need Adjusting: Forgot to take passwords into account -- Wont work if a password is added.. :(
 get_vnc_port_number ()
 {
         local GrabVNCPort=`ps aux | grep $1 | egrep '(--vnc|-n -m)'`
