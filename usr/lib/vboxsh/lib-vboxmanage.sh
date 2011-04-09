@@ -41,11 +41,15 @@ gen_vm_list ()
 ###Will Need Adjusting: Forgot to take passwords into account -- Wont work if a password is added.. :(
 get_vnc_port_number ()
 {
+   # Here's a little regex voodoo you might like
+   # ps aux | grep "VBox.*$1" | | sed - e 's/.*-m \([0-9]+\).*/\1/') -e '/ grep /d'
+
         local GrabVNCPort=`ps aux | grep $1 | egrep '(--vnc|-n -m)'`
         if [ "$GrabVNCPort" != "" ] ; then
                 local tmp=`echo ${GrabVNCPort:(-4)}`
                 state="running VNC Port $tmp"
         fi
+
 }
 
 ############
