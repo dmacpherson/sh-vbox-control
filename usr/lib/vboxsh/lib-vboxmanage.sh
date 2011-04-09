@@ -42,7 +42,7 @@ gen_vm_list ()
 get_vnc_port_number ()
 {
    # Here's a little regex voodoo you might like
-   # ps aux | grep "VBox.*$1" | | sed - e 's/.*-m \([0-9]+\).*/\1/') -e '/ grep /d'
+   # ps aux | grep "VBox.*$1" | sed - e 's/.*-m \([0-9]+\).*/\1/') -e '/ grep /d'
 
         local GrabVNCPort=`ps aux | grep $1 | egrep '(--vnc|-n -m)'`
         if [ "$GrabVNCPort" != "" ] ; then
