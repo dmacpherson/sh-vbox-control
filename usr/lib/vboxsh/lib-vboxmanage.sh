@@ -187,7 +187,7 @@ worker_startstop_vm ()
 				vnc_password="-o ${ANSWER_STRING}"
 			fi
 		fi
-		VBoxHeadless -s $2 $vnc_port_num $vnc_password > /dev/null 2>&1 &
+		VBoxHeadless -s $2 $vnc_password $vnc_port_num > /dev/null 2>&1 &
 	fi
 }
 
