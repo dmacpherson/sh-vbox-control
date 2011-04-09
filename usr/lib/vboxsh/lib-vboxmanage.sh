@@ -35,6 +35,7 @@ gen_vm_list ()
 
 ############
 ### Query ostypes known to the version of virtualbox installed
+### TODO: Remove interactive portions to appropriate script.
 worker_query_vbox_ostypes ()
 {
    unset pointer
@@ -60,29 +61,36 @@ worker_query_vbox_ostypes ()
 # TODO: Convert to passed arguments,
 # TODO: Default folder as var, selectable
 # TODO: Direct output to log and infobox it.
+# $1 (req) NAME for machine
+# $2 (req) OS TYPE
+# $3 (req) HDD SIZE
+# $4 (req) ISO Location
+# $5 (req) VDI Location as /path/to/location
 worker_create_vm ()
 {
-   VBoxManage -q createvm --name "$cvm_name" --ostype "$cvm_ostype" --register 
-   VBoxManage -q modifyvm "$cvm_name" --memory $cvm_mem --acpi on --boot1 dvd --nic1 nat --hwvirtex on --pae on
-   VBoxManage -q storagectl "$cvm_name" --name "IDE Controller" --add ide 
-   VBoxManage -q createvdi -filename "/mnt/raid/tmp/$cvm_name.vdi" -size $cvm_hdd --register
-   VBoxManage -q storageattach "$cvm_name" --storagectl "IDE Controller" --port 0 --device 0 --type hdd --medium "/mnt/raid/tmp/$cvm_name.vdi"
-   VBoxManage -q storageattach "$cvm_name" --storagectl "IDE Controller" --port 1 --device 0 --type dvddrive --medium "$cvm_iso"
+   VBoxManage -q createvm --name "$1" --ostype "$2" --register 
+   VBoxManage -q modifyvm "$1" --memory $cvm_mem --acpi on --boot1 dvd --nic1 nat --hwvirtex on --pae on
+   VBoxManage -q storagectl "$1" --name "IDE Controller" --add ide 
+   VBoxManage -q createvdi -filename "$5/$1.vdi" -size $3 --register
+   VBoxManage -q storageattach "$1" --storagectl "IDE Controller" --port 0 --device 0 --type hdd --medium "/mnt/raid/tmp/$1.vdi"
+   VBoxManage -q storageattach "$1" --storagectl "IDE Controller" --port 1 --device 0 --type dvddrive --medium "$4"
 }
 
 
 ############
 # Shows detailed info for selected VM
-# $1 (req) registered VM name
+# $1 (req) registered VM name or UUID
+# TODO: interactivity... Should we move the information display to another script?
 worker_show_vm_info()
 {
+   ask_yesno "got here"
    echo "#########################################" > $TMPDIR/vm-info
    echo "# Detailed information for \""$1"\"" >> $TMPDIR/vm-info
    echo "# Please note this is NOT an editable configuration" >> $TMPDIR/vm-info
    echo "# Provided by: \`VBoxManage showvminfo \""$1"\"\`" >> $TMPDIR/vm-info
    echo "# Press 'Q' to Quit" >> $TMPDIR/vm-info
    echo -e "#########################################\n\n\n" >> $TMPDIR/vm-info
-   VBoxManage showvminfo "$1" >> $TMPDIR/vm-info 2> $TMPDIR/vm-info-err && cat $TMPDIR/vm-info.$$ | less
+   VBoxManage showvminfo "$1" >> $TMPDIR/vm-info 2> $TMPDIR/vm-info-err && cat $TMPDIR/vm-info | less
    if [ $? ]
    then
       rm $TMPDIR/vm-info*
@@ -97,7 +105,8 @@ worker_show_vm_info()
 # $1 (req) registered VM Name to take snapshot of
 # $2 (req) name for snapshot
 # $3 (opt) description for snapshot
-# TODO: use dialog var
+# $4 (opt) pause flag. "1" pauses VM. All other values ignored 
+# TODO: use utilize libui
 worker_take_snapshot ()
 {
    unset opt_string
@@ -111,7 +120,7 @@ worker_take_snapshot ()
       opt_string=$("$opt_string --pause")
    fi
 
-   VBoxManage snapshot $1 take $2 $optstring &>$TMPDIR/vm-snapshot | dialog --tailbox $TMPDIR/vm-snapshot 0 0
+   VBoxManage snapshot "$1" take "$2" $optstring &>$TMPDIR/vm-snapshot | dialog --tailbox $TMPDIR/vm-snapshot 0 0
 
 
 }
@@ -136,7 +145,12 @@ worker_snapshot_restore ()
 # Worker to issue start/stop commands to VM
 # $1 (req) signal to send to vm
 # $2 (req) VM to send signal to
-# TODO: Error handling
+# $3 (opt) VNC Port
+# $4 (opt) Password for VNC
+# ARGVs 3&4 Are usedfor starting a machine headless
+# TODO: Error handling for VBoxManage controls
+# TODO: Remove interactive portions to appropriate script
+#   This lib is non-interactive and should house ONLY workers.
 worker_startstop_vm ()
 {
 	if [[ "$1" = "pause" || "$1" = "resume" || "$1" = "reset" || "$1" = "poweroff" || "$1" = "savestate" || "$1" = "acpipowerbutton" || "$1" = "acpisleepbutton" ]]
@@ -156,4 +170,12 @@ worker_startstop_vm ()
 		fi
 		VBoxHeadless -s $2 $vnc_port_num $vnc_password > /dev/null 2>&1 &
 	fi
+}
+
+############
+# Worker that returns the state of a VM
+# $1 (req) VM Name or UUID
+worker_get_vm_state ()
+{
+   VMSTATE=`echo "${${\`VBoxManage showvminfo "$1" | grep "^State: "\`#*\:}%\(*}" | sed 's/^ *//;s/ *$//'`
 }

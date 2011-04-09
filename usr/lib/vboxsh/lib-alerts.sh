@@ -6,7 +6,7 @@
 # $1 (optional) extra information
 please_wait ()
 {
-   inform "\nPlease wait while the request is processed.\nThis may take a moment...\n\n$1"
+   inform "\nPlease wait while the request is processed...\n\n$1"
 }
 
 
@@ -16,9 +16,11 @@ please_wait ()
 alert_error ()
 {
    if [ -f $1 ] 
-      then notify "There was an error processing your request...\n$2\nMore information can be found at $1" 
+   then
+      notify "There was an error processing your request...\n$2\nMore information can be found at $1" 
+   else
+      notify "There was an error processing your request...\n$2"
    fi
-   notify "There was an error processing your request...\n$2"
 }
 
 

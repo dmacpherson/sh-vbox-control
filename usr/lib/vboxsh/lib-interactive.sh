@@ -169,6 +169,7 @@ show_registered ()
 {
    while true
    do
+      please_wait "Loading list of currently registered VM's"
       gen_vm_list
       # TODO ADD LOADING DIALOG
       ask_option 0 "Currently registered VMs" "\n\nPlease select one for more information..." required "0" "Return To Main Menu" "${VMLIST[@]}"
@@ -181,45 +182,39 @@ show_registered ()
 ############
 # manage selected vm
 # $1 VM name
+# NOTE: Detailed information is parsed before display of this menu
+#   by vmparse_master() in lib-vminfo-parse.sh See there for more information
+vm_manage_root ()
+{
+   _manage_options=("0" "Return to Main Menu"\
+                    "1" "Show Detailed Information"\
+                    "2" "Snapshots"\
+                    "3" " "\
+                    "4" " "\
+                    "5" " "\
+                    "6" " "\
+                    "7" " "\
+                    "8" " "\
+                    "9" " ")
 
+   please_wait "Loading detailed information on selected VM..."
+   VBoxManage showvminfo "$1" > $TMPDIR/vm-manage 2>$TMPDIR/vm-manage-err
+   vmparse_master "$TMPDIR/vm-manage"
 
-#######################################
-###### STARTED COMMENT OUT HERE....
-#######################################
-
-#vm_manage_root ()
-#{
-#   _manage_options=("0" "Return to Main Menu"\
-#                    "1" " "\
-#                    "2" "Snapshots"\
-#                    "3" " "\
-#                    "4" " "\
-#                    "5" " "\
-#                    "6" " "\
-#                    "7" " "\
-#                    "8" " "\
-#                    "9" " "\)
-#   vm=$1
-#   please_wait "Requesting detailed information on selected VM..."
-#   VBoxManage showvminfo "$1" > $TMPDIR/vm-manage 2>$TMPDIR/vm-manage-err
-#   vmparse_master "$TMPDIR/vm-manage"
-#   while true #Keep looping until they choose to return to main menu
-#   do 
-#      ask_option 0 "Managing \"$vm\"..." '' required "${_manage_options[@]}"
-#      case $ANSWER_OPTION in
-#      "0")
-#         return ;;
-#      "2")
-#         vm_manage_snapshots $vm $$ ;;
-#      esac
-#   done
-#}
-
-#######################################
-###### STOPPED COMMENT OUT HERE....
-#######################################
-
-
+   while true #Keep looping until they choose to return to main menu
+   do 
+      ask_option 0 "Managing \"$1\"..." '' required "${_manage_options[@]}"
+      case $ANSWER_OPTION in
+      "0")
+         return ;;
+      "1")
+         worker_show_vm_info "$1"
+         ;;
+      "2")
+         vm_manage_snapshots "$1" ;;
+      esac
+   done
+}
 
 ############
 # Manage snapshots for chosen vm 
@@ -241,43 +236,74 @@ vm_manage_snapshots () \
       "0")
          return
          ;;
-      "1") # Take snapshot
-         ask_yesno "Are you sure you want to take a snapshot of \"$1\""
-         if [ $ANSWER_YESNO ]
+      "1")ask_option 0 "Snapshots for \"$1\"" '' required "0" "Return to Previous Menu" "${VMSNAPSHOTS[@]}" 
+         if [ $ANSWER_OPTION ]
          then
-            if [ ask_yesno "Do you want to pause \"$1\" before taking the snapshot?\nCurrent `cat $TMPDIR/vm-manage.$2 | grep -i "^State:" | sed 's/ */ /g'`" ]
+            continue
+         else
+            alert_error "We're sorry, this function is not yet available."   
+         fi
+         ;;
+      "2") # Take snapshot
+         ask_yesno "Are you sure you want to take a snapshot of \"$1\""
+         #echo "exit code was \"$?\""
+         if [[ $? -eq 0 ]]
+         then
+            ask_string "Please enter a name for this snapshot."
+            if [ -n $ANSWER_STRING ] 
             then 
-               worker_take_snapshot $1 1
-               if [ask_yesno "You chose to pause \"$1\" to take the snapshot.\n\nDo you want to resume the machine now?" ]
-               then 
-                  worker_startstop_vm "resume" $1
-               fi 
+               _snapname=$ANSWER_STRING
             else
-               worker_take_snapshot $1
+               inform "Invalid name! Returning to previous menu..."
+               return
+            fi
+            
+            worker_get_vm_state
+            if [ "$VMSTATE" = "running" ]
+            then
+               if [ ask_yesno "\"$1\" is currently Running.\n Do you want to pause before taking the snapshot?" ]
+               then
+                  worker_take_snapshot "$1" "$_snapname" 1
+                  if [ask_yesno "You chose to pause \"$1\" to take the snapshot.\n\nDo you want to resume the machine now?" ]
+                  then 
+                     worker_startstop_vm "resume" "$1"
+                  fi 
+               else
+                  worker_take_snapshot "$1"
+               fi
+            else
+               worker_take_snapshot "$1"
             fi
          else
             continue
          fi
          ;;
-      "2") # Restore snapshot
+      "3") # Restore snapshot
          ask_option 0 "Select snapshot to restore." '' required "0" "Return to Previous Menu" "${VMSNAPSHOTS[@]}" 
          if [ $ANSWER_OPTION ]
          then
             continue
          else
-            [ -n $ANSWER_OPTION ] && worker_snapshot_restore $1 $ANSWER_OPTION   
+            if [ -n $ANSWER_OPTION ]
+            then
+               ask_yesno "Are you sure you want to restore the snapshot: \"$ANSWER_OPTION\""
+               if [ $ANSWER_YESNO ]
+               then
+                  worker_snapshot_restore "$1" "$ANSWER_OPTION"
+               fi
+            fi
          fi
          ;;
-      "3") # Delete snapshot
+      "4") # Delete snapshot
          ask_option 0 "Select snapshot to delete." '' required "0" "Return to Previous Menu" "${VMSNAPSHOTS[@]}" 
          if [ $ANSWER_OPTION = "0" ]
          then
             continue
          else
-            ask_yesno "Are you sure you want to delete...\nSnapshot: \"$ANSWER_OPTION\"\nWhich belongs to: \"$1\"\nThis action cannot be undone."
+            ask_yesno "Are you sure you want to delete...\nSnapshot:          \"$ANSWER_OPTION\"\nWhich belongs to: \"$1\"\nThis action cannot be undone."
             if [ $ANSWER_YESNO ]
             then
-               [ -n $ANSWER_OPTION ] && worker_snapshot_restore $1 $ANSWER_OPTION   
+               [ -n $ANSWER_OPTION ] && worker_snapshot_restore "$1" "$ANSWER_OPTION"   
             else
                continue
             fi   
